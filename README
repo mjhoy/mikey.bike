@@ -2,3 +2,21 @@ mikey.bike
 ----------
 
   If only there were a .bikey TLD.
+
+
+BUILDING
+
+  bin/build: requires nix and cabal2nix, will (supposedly) set up
+  everything just right. there's a bit of hackery to add in a
+  dependency on Cocoa if you're on osx, which I need for some reason.
+
+
+DEVELOPMENT
+
+  bin/preview: runs a local server on port 8000 (standard hakyll site
+  setup)
+
+
+DEPLOY
+
+  bin/deploy: a simple rsync up to my server

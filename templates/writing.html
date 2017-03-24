@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <title>$title$</title>
+
+    <link rel="stylesheet" type="text/css" href="/stylesheets/base.css" />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/writings.css" />
+  </head>
+
+  <body>
+    <section id="content-writing">
+      <header id="post-header">
+        <h1>$title$</h1>
+      </header>
+
+      $if(postNav)$
+      $postNav$
+      $endif$
+
+      $body$
+
+      <footer id="post-footer">
+        <p>
+          $date$
+        </p>
+      </footer>
+    </section>
+
+    <footer id="main" class='writing'>
+      <p>
+        Michael Hoy
+        <span class="vert-bar">|</span>
+        <a href="mailto:mjh@mjhoy.com">email</a>
+        <span class="vert-bar">|</span>
+        <a href="http://twitter.com/mjhoy">twitter</a>
+      </p>
+    </footer>
+  </body>
+</html>

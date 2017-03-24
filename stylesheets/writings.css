@@ -1,0 +1,20 @@
+.nav-prev-link,
+.nav-next-link {
+    position: absolute;
+    top: 79px;
+    color: #555;
+}
+
+.nav-prev-link:hover,
+.nav-next-link:hover {
+    color: black;
+}
+
+.nav-prev-link {
+    left: 20px;
+}
+
+.nav-next-link {
+    right: 20px;
+}
+

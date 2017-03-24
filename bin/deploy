@@ -1,0 +1,7 @@
+#!/bin/sh
+
+set -ue
+
+./dist/build/site/site clean
+./dist/build/site/site build
+rsync -avz --delete _site/* koba3:/srv/www/mikey.bike/public_html

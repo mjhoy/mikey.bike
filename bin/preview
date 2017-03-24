@@ -1,0 +1,5 @@
+#!/bin/sh
+
+set -ue
+
+./dist/build/site/site preview

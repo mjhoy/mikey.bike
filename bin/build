@@ -1,0 +1,15 @@
+#!/bin/sh
+
+set -eu
+
+cabal2nix . --shell > shell.nix
+
+# hack-y
+if [[ $(uname) == "Darwin" ]]; then
+    awk '/executableHaskellDepends/{print "        executableToolDepends = [ nixpkgs.darwin.apple_sdk.frameworks.Cocoa ];"}1' shell.nix > shell.nix.changed
+    mv shell.nix.changed shell.nix
+fi
+
+nix-shell --run "cabal clean && \
+                 cabal configure && \
+                 cabal build"
