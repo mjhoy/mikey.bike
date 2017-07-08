@@ -10,6 +10,10 @@ BUILDING
   everything just right. there's a bit of hackery to add in a
   dependency on Cocoa if you're on osx, which I need for some reason.
 
+  on osx:
+
+  $ nix-shell --command "cabal build" shell-osx.nix
+
 
 DEVELOPMENT
 
