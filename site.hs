@@ -1,10 +1,11 @@
 {-# LANGUAGE OverloadedStrings #-}
-import           Data.Monoid (mappend, (<>))
+import           Data.Monoid ((<>))
 import           Control.Applicative (empty)
+import           Control.Arrow ((>>>))
 import           Hakyll
 import           Data.Time.Clock (UTCTime)
 import           Data.Time.Locale.Compat (defaultTimeLocale)
-import           System.FilePath ((</>), takeDirectory)
+import           System.FilePath ((</>), takeDirectory, replaceExtension, splitDirectories)
 import           Text.XML.HXT.DOM.XmlNode
 import           Text.XML.HXT.DOM.TypeDefs
 import           Text.XML.HXT.DOM.ShowXml (xshow)
@@ -51,6 +52,17 @@ main = hakyll $ do
       route $ setExtension "html"
       compile $ pandocCompiler
             >>= loadAndApplyTemplate "templates/writing.html" nextPrevNavCtx
+
+    match "misc/**" $ do
+      -- Drop "misc/" from the URL.
+      route $ customRoute $ toFilePath
+                        >>> splitDirectories
+                        >>> drop 1
+                        >>> concat
+                        >>> (flip replaceExtension) "html"
+      compile $ pandocCompiler
+            >>= loadAndApplyTemplate "templates/writing.html" defaultContext
+
 
     match "templates/*" $ compile templateBodyCompiler
 
