@@ -1,3 +1,23 @@
 #home {
   margin: 2em;
+  color: #777;
+  font-family: Monaco, monospace;
+}
+
+#home h1,
+#home h3 {
+  font-size: 1.0em;
+  font-weight: normal;
+}
+
+#home h1 { color: #aaa; }
+
+#home h3 { color: #222; }
+
+#home a {
+  color: #666;
+  border-bottom-color: #666;
+}
+#home a:hover {
+  color: black;
 }
