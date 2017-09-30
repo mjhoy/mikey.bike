@@ -1,7 +1,7 @@
 ---
-title: Two days on the Superior Hiking Trail
+title: Three days on the Superior Hiking Trail
 date: September 30, 2017
-linkTitle: Two days on the Superior Hiking Trail
+linkTitle: Three days on the Superior Hiking Trail
 ---
 
 ![](/images/superior/DSCF6363.jpg)
