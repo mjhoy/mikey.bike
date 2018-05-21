@@ -38,20 +38,22 @@ main = hakyll $ do
 
     match "index.html" $ do
       route idRoute
-      compile copyFileCompiler
+      compile $ getResourceBody
+            >>= loadAndApplyTemplate "templates/layout.html" defaultContext
 
     match "writings/**.png" $ do
       route idRoute
       compile copyFileCompiler
 
     match "writings/**.jpg" $ do
-      route idRoute
+      route idRoute 
       compile copyFileCompiler
 
     match "writings/**" $ do
       route $ setExtension "html"
       compile $ pandocCompiler
             >>= loadAndApplyTemplate "templates/writing.html" nextPrevNavCtx
+            >>= loadAndApplyTemplate "templates/layout.html" nextPrevNavCtx
 
     match "misc/**" $ do
       -- Drop "misc/" from the URL.
@@ -62,6 +64,7 @@ main = hakyll $ do
                         >>> (flip replaceExtension) "html"
       compile $ pandocCompiler
             >>= loadAndApplyTemplate "templates/writing.html" defaultContext
+            >>= loadAndApplyTemplate "templates/layout.html" defaultContext
 
 
     match "templates/*" $ compile templateBodyCompiler
