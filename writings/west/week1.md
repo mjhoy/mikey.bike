@@ -4,7 +4,7 @@ date: June 21, 2016
 linkTitle: "Week 1"
 ---
 
-![](/images/west/P1030132.jpg)
+![\ ](/images/west/P1030132.jpg)
 
 
 **Day 1 — June 13, 2016** I leave the lovely Omega house, Minneapolis,
@@ -100,7 +100,7 @@ traffic getting out of the city. Branches and some trees are down from
 last night. I wind my way down to Highway 44, which cuts a straight
 line west to the Missouri. And I mean <em>straight</em>.
 
-![](/images/west/P1030090.jpg)
+![\ ](/images/west/P1030090.jpg)
 
 My plan had been to end the day in Parkston. When I arrive there
 around noon, it's not much of a town. There are two places to get a
@@ -186,4 +186,4 @@ sun illuminates plumes of thunderheads to the distant east. I hear the
 next day there were storms in Sioux Falls. That's looking two days
 away.
 
-![](/images/west/P1030137.jpg)
+![\ ](/images/west/P1030137.jpg)

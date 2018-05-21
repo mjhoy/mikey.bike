@@ -18,3 +18,14 @@
     right: 20px;
 }
 
+figcaption {
+  max-width: 700px;
+  margin: 0.2em auto 1em auto;
+  padding: 0 1em;
+  font: 11px/18px Verdana;
+  text-align: center;
+  color: #555;
+}
+figure {
+  margin: 1em 0;
+}

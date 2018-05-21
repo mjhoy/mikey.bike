@@ -40,7 +40,7 @@ At some 9,000 feet elevation there is a rest area. A biker who passed
 me earlier, pumping his fists, finds me, full of enthusiasm for my
 climb. I eat some bananas, fending off impudent squirrels.
 
-![](/images/west/P1030822.jpg)
+![\ ](/images/west/P1030822.jpg)
 
 Up I go. A mountain goat stands on an outcrop, watching me. The
 switchbacks end on a high plateau covered in grasses and
@@ -175,7 +175,7 @@ see the crags and snow of the Beartooth. To the south, where I'm
 headed, the Yellowstone cuts a gorge through hills and leads to a wide
 area of flat, forested land, as far as I can see: the caldera.
 
-![](/images/west/P1030952.jpg)
+![\ ](/images/west/P1030952.jpg)
 
 There are bubbling, sulfuric hot springs along the road. When I arrive
 at Yellowstone Lake parts of the shore are steaming. A cave that
@@ -242,7 +242,7 @@ runs the Montana-Idaho border.
 
 Montana. I cross the border and exit Yellowstone.
 
-![](/images/west/P1040028.jpg)
+![\ ](/images/west/P1040028.jpg)
 
 
 **Day 27**

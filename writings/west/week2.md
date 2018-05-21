@@ -4,7 +4,7 @@ date: June 28, 2016
 linkTitle: "Week 2"
 ---
 
-![](/images/west/P1030401.jpg)
+![\ ](/images/west/P1030401.jpg)
 
 
 **Day 8 — June 20** The motel hosts breakfast in the office, around a
@@ -164,7 +164,7 @@ recumbent. It looks nice, easy on the back. We part ways at Norris
 Peak road, and I bike on into the hills and canyons of the Black
 Hills.
 
-![](/images/west/P1030354.jpg)
+![\ ](/images/west/P1030354.jpg)
 
 At some point I pull off on an old trail and relax under a tree. It's
 nearly impossible to see me from the road, but a car stops right in
