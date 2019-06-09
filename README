@@ -6,13 +6,9 @@ mikey.bike
 
 BUILDING
 
-  bin/build: requires nix and cabal2nix, will (supposedly) set up
-  everything just right. there's a bit of hackery to add in a
-  dependency on Cocoa if you're on osx, which I need for some reason.
+  requires cabal. then run:
 
-  on osx:
-
-  $ nix-shell --command "cabal build" shell-osx.nix
+  $ cabal new-build
 
 
 DEVELOPMENT
