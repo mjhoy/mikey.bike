@@ -1,5 +1,0 @@
-#!/bin/sh
-
-set -ue
-
-cabal new-run site -- preview

@@ -8,13 +8,14 @@ BUILDING
 
   requires cabal. then run:
 
-  $ cabal new-build
+  $ make build
 
 
 DEVELOPMENT
 
-  bin/preview: runs a local server on port 8000 (standard hakyll site
-  setup)
+  run a local server on port 8000 (standard hakyll site setup):
+
+  $ make preview
 
 
 DEPLOY

@@ -2,7 +2,7 @@
 
 set -ue
 
-cabal new-clean
-cabal new-build
-cabal new-run site -- build
+make clean
+make build
+make site-build
 rsync -avz --delete _site/* koba3:/srv/www/mikey.bike/public_html
