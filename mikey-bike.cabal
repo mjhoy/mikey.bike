@@ -4,6 +4,13 @@ name:               mikey-bike
 version:            0.1.0.0
 build-type:         Simple
 
+synopsis:           Static site generator for http://mikey.bike.
+description:        Static site generator, using the Hakyll library,
+                    for http://mikey.bike.
+category:           Web
+author:             Michael Hoy
+maintainer:         mjh@mjhoy.com
+
 executable site
   main-is:          Main.hs
   hs-source-dirs:   src
