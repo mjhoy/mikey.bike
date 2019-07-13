@@ -1,4 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
+
+module Main (main) where
+
 import           Data.Monoid ((<>))
 import           Control.Applicative (empty)
 import           Control.Arrow ((>>>))
@@ -46,7 +49,7 @@ main = hakyll $ do
       compile copyFileCompiler
 
     match "writings/**.jpg" $ do
-      route idRoute 
+      route idRoute
       compile copyFileCompiler
 
     match "writings/**" $ do
