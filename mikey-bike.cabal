@@ -16,6 +16,7 @@ executable site
   hs-source-dirs:   src
   ghc-options:      -threaded
   default-language: Haskell2010
+  other-modules:    Rules.Writing
   build-depends:    base == 4.*
                   , hakyll == 4.12.*
                   , time >=1.6
