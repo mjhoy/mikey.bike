@@ -13,3 +13,6 @@ preview:
 
 site-build:
 	cabal new-run mikey-bike -- build
+
+site-clean:
+	cabal new-run mikey-bike -- clean
