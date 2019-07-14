@@ -7,6 +7,7 @@ import           Hakyll
 import           System.FilePath (replaceExtension, splitDirectories)
 
 import qualified Rules.Writing as Writing
+import qualified Rules.Journal as Journal
 
 main :: IO ()
 main = hakyll $ do
@@ -37,6 +38,8 @@ main = hakyll $ do
             >>= loadAndApplyTemplate "templates/layout.html" defaultContext
 
     Writing.rules
+
+    Journal.rules
 
     match "misc/**" $ do
       -- Drop "misc/" from the URL.
