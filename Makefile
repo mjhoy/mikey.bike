@@ -1,4 +1,4 @@
-.PHONY: clean build preview site-build
+.PHONY: clean build preview site-build site-clean
 
 all: build
 
@@ -8,10 +8,10 @@ clean:
 build:
 	cabal new-build
 
-preview:
-	cabal new-run mikey-bike -- preview
+preview: site-clean
+	cabal new-run mikey-bike -- watch
 
-site-build:
+site-build: site-clean
 	cabal new-run mikey-bike -- build
 
 site-clean:
