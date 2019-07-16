@@ -29,7 +29,7 @@ pre, code {
   font-size: 12px;
 }
 #content-writing pre {
-  margin: 1em 0;
+  margin: 15px 0;
   line-height: 18px;
 }
 #content-writing > div.sourceCode a {
@@ -141,6 +141,7 @@ div.aside {
   line-height: 16px;
   font-weight: 400;
   color: #222;
+  margin-top: 0.4em;
 }
 #content-writing div.aside p {
   margin-top: 0;
