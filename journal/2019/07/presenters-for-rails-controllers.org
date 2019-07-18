@@ -45,10 +45,11 @@ For simple controllers, you might think of the view as an /extension/
 of the controller. It has access to private internals. The template is
 rendered as if it were just another method on the controller.
 
-But views and controllers have different concerns. A controller
-generally interacts with the database; a view should not. Controllers
-send email, spawn background jobs, handle validation failure, catch
-exceptions. Views do not.
+But in the [[https://en.wikipedia.org/wiki/Model–view–controller][MVC pattern]], views and controllers have different
+concerns. A controller generally manipulates model objects to interact
+with the database; a view should not. Controllers send email, spawn
+background jobs, handle validation failure, catch exceptions. Views do
+not.
 
 #+begin_aside
 Using =ActiveRecord= objects in the view should be avoided when
@@ -79,10 +80,10 @@ end
 
 Even in this simple show action, there is some awkwardness with
 naming. =@post= in the view is now a =PostPresenter= — good, this is
-what we want. But the controller now must distinguish between model
-and presenter objects, and with the =@post= name reserved for the
-presenter, our model variables get an awkward name like
-=post_model=. We have to rename and rearrange our controller's
+what we want. Unfortunately, now the controller must distinguish
+between model and presenter objects, and with the =@post= name
+reserved for the presenter, our model variables get an awkward name
+like =post_model=. We have to rename and rearrange our controller's
 instance variables because their names are used in the view; something
 about this feels wrong.
 
@@ -155,9 +156,9 @@ Merb's "proof that everything belongs in one class to begin with" was
 that it was more performant.
 #+end_aside
 
-Controllers inherit from =AbstractController=, and we can override
-this. Let's define it to directly return a hash that is set from
-another method, =present=:
+Controllers inherit from =AbstractController=, so we can override
+=view_assigns= to do whatever we want. Let's have it simply return a
+hash that is set in a new method called =present=:
 
 #+begin_src ruby
 module Presenters
@@ -171,9 +172,9 @@ module Presenters
 end
 #+end_src
 
-Now we can include this module in our controller, and our instance
-variables will not be passed to the views. Instead, we explicitly
-assign variables to the view with =present=:
+Now we can include the =Presenters= module in our controller, and our
+instance variables will not be passed to the views. Instead, we
+explicitly assign variables to the view with =present=:
 
 #+begin_src ruby
 class PostsController < ApplicationController
@@ -211,10 +212,9 @@ simply be used to share instance state, as they are meant to do. We
 can refactor controller code without worrying what will end up in a
 view.
 
-We can clean up this code a little more. The =present= method should
-only ever be passed =Presenter= objects. If we assume that a
+We can clean up this code a little more. If we assume that a
 =Presenter= is always instantiated in the same way — a
-=ModelNamePresenter= accepts a =ModelName= object as its single
+=ModelNamePresenter= accepts a =ModelName= object as a single
 initialization parameter — we can instantiate the presenter using the
 class of the object passed in:
 
@@ -227,17 +227,52 @@ def present(hsh)
 end
 #+end_src
 
-Now we can call
+Now we can simply call =present(post: @post)=. The final controller
+looks like this:
 
 #+begin_src ruby
-present(post: @post)
+class PostsController < ApplicationController
+  include Presenters
+
+  before_action :require_post
+
+  def show
+    present(post: @post)
+  end
+
+  def edit
+    present(post: @post)
+  end
+
+  def update
+    if @post.update(params[:post].permit(:title, :body))
+      redirect_to @post, notice: "Post updated."
+    else
+      present(post: @post)
+      render :edit
+    end
+  end
+
+  private
+
+  def require_post
+    @post = Post.find(params[:id])
+  end
+end
 #+end_src
 
-instead of
+The =present= method will fail with a uninitialized constant exception
+if an appropriate =Presenter= class is not found. In this way we
+enforce some consistency in the view: instance variables must be
+presenter objects.
 
-#+begin_src ruby
-present(post: PostPresenter.new(@post))
-#+end_src
+We have split apart the shared scope between the controller and the
+view, with the =present= method providing the interface between
+them. A developer working in controller code can be confident instance
+variables incidentally used for refactoring actions won't affect view
+code. A front end developer knows exactly which variables were meant
+for the view. If nothing else, there is a self-documenting nature to
+=present= that the standard Rails controller lacks.
 
 Freebird has extracted a simple library for setting this up in Rails
 controllers, as well as providing a base =Presenter= class with some
