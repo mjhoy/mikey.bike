@@ -10,8 +10,11 @@ import qualified Rules.Writing as Writing
 import qualified Rules.Journal as Journal
 
 main :: IO ()
-main = hakyll $ do
+main = do
 
+  writingSections <- Writing.buildWritingSections "writings"
+
+  hakyll $ do
     match "images/*" $ do
         route   idRoute
         compile copyFileCompiler
@@ -37,7 +40,7 @@ main = hakyll $ do
       compile $ getResourceBody
             >>= loadAndApplyTemplate "templates/layout.html" defaultContext
 
-    Writing.rules
+    Writing.rules writingSections
 
     Journal.rules
 

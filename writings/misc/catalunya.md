@@ -1,6 +1,6 @@
 ---
 title: A short bike trip in Catalunya
-date: December, 2014
+date: December 13, 2014
 ---
 
 I wait in the train station in a little town called Parets for three
