@@ -52,12 +52,13 @@ background jobs, handle validation failure, catch exceptions. Views do
 not.
 
 #+begin_aside
-Using =ActiveRecord= objects in the view should be avoided when
-possible. These are generally the most powerful objects in a Rails
-app. They have an [[https://api.rubyonrails.org/classes/ActiveRecord/Base.html][enormous API]] and many methods query the
-database. One of our core models at Freebird has 619 instance methods
-(not counting those from =Object=). It's probably a bad idea for a
-view, responsible for producing HTML, to execute SQL queries.
+Using =ActiveRecord= objects in the view seems like a good thing to
+avoid if possible. These are generally the most powerful objects in a
+Rails app. They have an [[https://api.rubyonrails.org/classes/ActiveRecord/Base.html][enormous API]] and many methods query the
+database. One of our models at Freebird has 619 instance methods (not
+counting those from =Object=) — most of those are added by
+=ActiveRecord=. It's probably a bad idea for a view, responsible for
+producing HTML, to execute SQL queries.
 
 Additionally, objects used in a view often need methods
 specific to formatting content for the user. Adding these to
@@ -130,8 +131,8 @@ controllers.
 Thankfully, this is easy to address. The public method used to
 populate the view with instance variables is
 [[https://github.com/rails/rails/blob/v6.0.0.rc1/actionpack/lib/abstract_controller/rendering.rb#L64][=AbstractController#view_assigns=]]. It builds a hash from all the
-instance variables in the controller object. It is not a large or
-complicated method:
+instance variables in the controller object. It is not a complicated
+method:
 
 #+begin_src ruby
 # This method should return a hash with assigns.
@@ -227,8 +228,10 @@ def present(hsh)
 end
 #+end_src
 
-Now we can simply call =present(post: @post)=. The final controller
-looks like this:
+Calling =present(post: @post)= now inspects the class name of =@post=,
+finds the corresponding =Presenter= class and instantiates a presenter
+with the =@post= object passed to the constructor. The final
+controller looks like this:
 
 #+begin_src ruby
 class PostsController < ApplicationController
