@@ -38,7 +38,7 @@ main = do
     match "index.html" $ do
       route idRoute
       compile $ getResourceBody
-            >>= loadAndApplyTemplate "templates/layout.html" defaultContext
+            >>= loadAndApplyTemplate "templates/layout-no-footer.html" defaultContext
 
     Writing.rules writingSections
 
