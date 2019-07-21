@@ -3,7 +3,6 @@
 module Rules.Journal where
 
 import           Hakyll
-import           Contexts.NextPrevNav (nextPrevNav)
 
 rules :: Rules ()
 rules = do
