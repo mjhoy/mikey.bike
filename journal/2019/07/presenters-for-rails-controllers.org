@@ -1,0 +1,286 @@
+---
+title: A presenter pattern for Rails controllers
+date: July 15, 2019
+---
+
+Rails controllers have a trick to pass data to the view: all instance
+variables are copied over after an action method is executed. This is
+at odds with good Ruby object design and causes practical problems. It
+becomes awkward to refactor controller methods without exposing
+unwanted state to the view — a private method that sets an instance
+variable has side effects elsewhere in the code. Controllers have the
+strange task of mutating their inner state as their public behavior.
+
+#+begin_aside
+I'd have guessed that =Object#instance_variable_get= and
+=#instance_variable_set= were private methods. Not so. Apparently it
+is "public" API for you to mess with any Ruby object's internals.
+#+end_aside
+
+How many Ruby classes have you needed to test by examining their
+instance variables? I don't think I've done this anywhere, except in
+controller tests, where it's the norm.
+
+It is true that the trick is aesthetically pleasing for simple
+controllers and for when you need to [[https://www.youtube.com/watch?v=Gzj723LkRJY][demo Rails]]. Take a standard Rails
+controller with one simple action:
+
+#+begin_src ruby
+class PostsController < ApplicationController
+  def show
+    @post = Post.find(params[:id])
+  end
+end
+#+end_src
+
+And now, in the corresponding view, the =@post= is available:
+
+#+begin_src html
+<h1>
+  <%= @post.title %>
+</h1>
+#+end_src
+
+For simple controllers, you might think of the view as an /extension/
+of the controller. It has access to private internals. The template is
+rendered as if it were just another method on the controller.
+
+But in the [[https://en.wikipedia.org/wiki/Model–view–controller][MVC pattern]], views and controllers have different
+concerns. A controller generally manipulates model objects to interact
+with the database; a view should not. Controllers send email, spawn
+background jobs, handle validation failure, catch exceptions. Views do
+not.
+
+#+begin_aside
+Using =ActiveRecord= objects in the view seems like a good thing to
+avoid if possible. These are generally the most powerful objects in a
+Rails app. They have an [[https://api.rubyonrails.org/classes/ActiveRecord/Base.html][enormous API]] and many methods query the
+database. One of our models at Freebird has 619 instance methods (not
+counting those from =Object=) — most of those are added by
+=ActiveRecord=. It's probably a bad idea for a view, responsible for
+producing HTML, to execute SQL queries.
+
+Additionally, objects used in a view often need methods
+specific to formatting content for the user. Adding these to
+=ActiveRecord= classes makes their large interface even wider.
+#+end_aside
+
+At [[https://www.getfreebird.com/][Freebird]], we're moving to using =Presenter= objects that wrap
+=ActiveRecord= objects, exposing only the methods that the view needs
+and adding view-specific logic. But we found it was a little awkward
+to introduce them into standard controllers. Consider this code:
+
+#+begin_src ruby
+class PostController < ApplicationController
+  def show
+    post_model = Post.find(params[:id])
+    @post = PostPresenter.new(post_model)
+  end
+end
+#+end_src
+
+Even in this simple show action, there is some awkwardness with
+naming. =@post= in the view is now a =PostPresenter= — good, this is
+what we want. Unfortunately, now the controller must distinguish
+between model and presenter objects, and with the =@post= name
+reserved for the presenter, our model variables get an awkward name
+like =post_model=. We have to rename and rearrange our controller's
+instance variables because their names are used in the view; something
+about this feels wrong.
+
+With a few more actions, the situation gets worse:
+
+#+begin_src ruby
+class PostsController < ApplicationController
+  before_action :require_post
+
+  def show; end
+
+  def edit; end
+
+  def update
+    if @post_model.update(params[:post].permit(:title, :body))
+      redirect_to @post_model, notice: "Post updated."
+    else
+      render :edit
+    end
+  end
+
+  private
+
+  def require_post
+    @post_model = Post.find(params[:id])
+    @post = PostPresenter.new(@post_model)
+  end
+end
+#+end_src
+
+#+begin_aside
+An alternative is to /overwrite/ the =@post= variable for the view,
+e.g., =@post = PostPresenter.new(@post)=. But this is error-prone,
+confusing and — were we using [[https://sorbet.org][Sorbet]] — a type error.
+#+end_aside
+
+We've factored out common logic into =require_post=, but in doing so,
+our views now have access to the =@post_model= instance variable. And
+we now have two kinds of instance variables, one that is meant to be
+passed and used in the view, and one that is not. This makes the
+intention of the code harder to follow, especially in more complex
+controllers.
+
+Thankfully, this is easy to address. The public method used to
+populate the view with instance variables is
+[[https://github.com/rails/rails/blob/v6.0.0.rc1/actionpack/lib/abstract_controller/rendering.rb#L64][=AbstractController#view_assigns=]]. It builds a hash from all the
+instance variables in the controller object. It is not a complicated
+method:
+
+#+begin_src ruby
+# This method should return a hash with assigns.
+# You can overwrite this configuration per controller.
+def view_assigns
+  protected_vars = _protected_ivars
+  variables      = instance_variables
+
+  variables.reject! { |s| protected_vars.include? s }
+  variables.each_with_object({}) { |name, hash|
+    hash[name.slice(1, name.length)] = instance_variable_get(name)
+  }
+end
+#+end_src
+
+#+begin_aside
+Interestingly, in Merb, [[https://www.rubydoc.info/gems/merb-core/Merb][views were just methods on controllers]],
+meaning the /apparent/ sharing of state was structural. I think Rails
+got it right here.
+
+Merb's "proof that everything belongs in one class to begin with" was
+that it was more performant.
+#+end_aside
+
+Controllers inherit from =AbstractController=, so we can override
+=view_assigns= to do whatever we want. Let's have it simply return a
+hash that is set in a new method called =present=:
+
+#+begin_src ruby
+module Presenters
+  def view_assigns
+    @_presenters || {}
+  end
+
+  def present(hsh)
+    @_presenters = hsh
+  end
+end
+#+end_src
+
+Now we can include the =Presenters= module in our controller, and our
+instance variables will not be passed to the views. Instead, we
+explicitly assign variables to the view with =present=:
+
+#+begin_src ruby
+class PostsController < ApplicationController
+  include Presenters
+
+  before_action :require_post
+
+  def show
+    present(post: PostPresenter.new(@post))
+  end
+
+  def edit
+    present(post: PostPresenter.new(@post))
+  end
+
+  def update
+    if @post.update(params[:post].permit(:title, :body))
+      redirect_to @post, notice: "Post updated."
+    else
+      present(post: PostPresenter.new(@post))
+      render :edit
+    end
+  end
+
+  private
+
+  def require_post
+    @post = Post.find(params[:id])
+  end
+end
+#+end_src
+
+The awkwardness of controller instance variables is solved — they can
+simply be used to share instance state, as they are meant to do. We
+can refactor controller code without worrying what will end up in a
+view.
+
+We can clean up this code a little more. If we assume that a
+=Presenter= is always instantiated in the same way — a
+=ModelNamePresenter= accepts a =ModelName= object as a single
+initialization parameter — we can instantiate the presenter using the
+class of the object passed in:
+
+#+begin_src ruby
+def present(hsh)
+  @_presenters ||= {}
+  hsh.each_with_object(@_presenters) do |(k, v), acc|
+    acc[k] = "#{v.class}Presenter".constantize.new(v)
+  end
+end
+#+end_src
+
+Calling =present(post: @post)= now inspects the class name of =@post=,
+finds the corresponding =Presenter= class and instantiates a presenter
+with the =@post= object passed to the constructor. The final
+controller looks like this:
+
+#+begin_src ruby
+class PostsController < ApplicationController
+  include Presenters
+
+  before_action :require_post
+
+  def show
+    present(post: @post)
+  end
+
+  def edit
+    present(post: @post)
+  end
+
+  def update
+    if @post.update(params[:post].permit(:title, :body))
+      redirect_to @post, notice: "Post updated."
+    else
+      present(post: @post)
+      render :edit
+    end
+  end
+
+  private
+
+  def require_post
+    @post = Post.find(params[:id])
+  end
+end
+#+end_src
+
+The =present= method will fail with a uninitialized constant exception
+if an appropriate =Presenter= class is not found. In this way we
+enforce some consistency in the view: instance variables must be
+presenter objects.
+
+We have split apart the shared scope between the controller and the
+view, with the =present= method providing the interface between
+them. A developer working in controller code can be confident instance
+variables incidentally used for refactoring actions won't affect view
+code. A front end developer knows exactly which variables were meant
+for the view. If nothing else, there is a self-documenting nature to
+=present= that the standard Rails controller lacks.
+
+Freebird has extracted a simple library for setting this up in Rails
+controllers, as well as providing a base =Presenter= class with some
+conveniences. Check it out, it's [[https://github.com/getfreebirdinc/livery][called Livery]]. It does a bit more
+than the =PostsController= example here, but the basic idea is the
+same. For instance, [[https://github.com/getfreebirdinc/livery/blob/1fa99e496fc4fe3b0a49e525713b7c36bbda0ac9/lib/livery/controller.rb#L113][our implementation of =present=]] handles passing in
+presenter objects directly, objects with module namespaces, and
+collections.
