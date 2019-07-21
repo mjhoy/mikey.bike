@@ -54,9 +54,17 @@ rules sections = do
             >>= loadAndApplyTemplate "templates/layout.html" nextPrevNav
 
   forM_ sections $ \section -> do
-    match (fromGlob $ writingSectionIndex section) $ do
+    let idx = writingSectionIndex section
+    let dir = writingSectionDir section
+    match (fromGlob idx) $ do
       route $ setExtension "html"
-      compile pandocCompiler
+      compile $ do
+        let writingsGlob = fromGlob (dir </> "**")
+        writings <- chronological =<< loadAll writingsGlob
+        let context =
+              listField "posts" defaultContext (return writings) <>
+              defaultContext
+        pandocCompiler >>= loadAndApplyTemplate "templates/writing_section.html" context
 
   create ["writings.html"] $ do
     route idRoute

@@ -30,3 +30,34 @@ figure {
   margin: 1em auto;
   text-align: center;
 }
+
+#writings-index {
+  max-width: 700px;
+  margin: 0 auto 3em;
+}
+#writings-index img {
+  max-width: 400px;
+}
+
+#writings-index h3 {
+  font-family: Helvetica;
+  font-size: 16px;
+  font-weight: 400;
+  margin-bottom: 10px;
+  margin-top: 60px;
+}
+
+#writings-index .vertical-rule {
+  font-size: 0.9em;
+  color: #777;
+  padding: 0 3px;
+}
+#writings-index .date {
+  color: #222;
+  font-family: Helvetica;
+  font-size: 0.7em;
+  text-transform: uppercase;
+}
+#writings-index .writing-post {
+  margin: 0.3em 0;
+}
