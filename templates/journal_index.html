@@ -1,0 +1,14 @@
+<section id="journal-index">
+  $for(posts)$
+    <div class="journal-entry">
+      <header class="post-header">
+        <div class="journal-date">
+          <a href="$url$">$date$</a>
+        </div>
+        <h1>$title$</h1>
+      </header>
+
+      $body$
+    </div>
+  $endfor$
+</section>

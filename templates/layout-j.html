@@ -2,14 +2,14 @@
 <html>
   <head>
     <meta charset='utf-8'>
-    <title>$title$</title>
+    <title>$title$ | mikey.bike</title>
 
     <link rel="stylesheet" type="text/css" href="/stylesheets/journal.css" />
 
     <link rel='stylesheet' href='//cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack.css'>
 
     $if(extraCss)$
-    <link rel="stylesheet" type="text/css" href="/stylesheets/$extraCss$" />
+      <link rel="stylesheet" type="text/css" href="/stylesheets/$extraCss$" />
     $endif$
   </head>
 
@@ -17,7 +17,7 @@
     $body$
 
     <footer id="main">
-      $partial("templates/_footer.html")$
+      $partial("templates/_footer_journal.html")$
     </footer>
   </body>
 </html>

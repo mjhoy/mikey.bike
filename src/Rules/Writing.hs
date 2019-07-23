@@ -70,9 +70,12 @@ rules sections = do
     route idRoute
     compile $ do
       writingIndices <- recentFirst =<< loadAll "writings/*.md"
+      let layoutCtx =
+            constField "title" "Writings | mikey.bike" <>
+            defaultContext
       let indexCtx =
             listField "topics" topicCtx (return writingIndices) <>
-            defaultContext
+            layoutCtx
       makeItem ""
         >>= loadAndApplyTemplate "templates/writing_index.html" indexCtx
-        >>= loadAndApplyTemplate "templates/layout.html" defaultContext
+        >>= loadAndApplyTemplate "templates/layout.html" layoutCtx
