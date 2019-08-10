@@ -2,12 +2,19 @@
 
 module Rules.Journal where
 
+import           Control.Monad (filterM)
+import           Data.Maybe (isNothing)
 import           Hakyll
 
 postCtx :: Context String
 postCtx =
   dateField "date" "%B %e, %Y" <>
   defaultContext
+
+nonDrafts :: (MonadMetadata m) => [Item a] -> m [Item a]
+nonDrafts = filterM f
+  where
+    f i = isNothing <$> getMetadataField (itemIdentifier i) "draft"
 
 rules :: Rules ()
 rules = do
@@ -22,7 +29,7 @@ rules = do
   create ["j/index.html"] $ do
     route idRoute
     compile $ do
-      posts <- recentFirst =<< loadAllSnapshots "journal/**" "content"
+      posts <- recentFirst =<< nonDrafts =<< loadAllSnapshots "journal/**" "content"
       let layoutCtx =
             constField "title" "Journal" <>
             defaultContext
