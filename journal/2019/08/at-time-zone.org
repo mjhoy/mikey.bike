@@ -1,0 +1,349 @@
+---
+title: Representing AT TIME ZONE in Haskell and Rust
+date: August 10, 2019
+draft: true
+---
+
+Postgresql's =AT TIME ZONE= is one of those functions that seems
+intuitive at first but can bite you very easily. If you're going to
+use it, you should very carefully [[https://www.postgresql.org/docs/11/functions-datetime.html][read the documentation]] and verify
+what the input types are, because it's both an overloaded function
+that's polymorphic in its return type:
+
+#+begin_src sql
+select '2019-08-10T8:51:00'::timestamp AT TIME ZONE 'PDT';
+-- #=> 2019-08-10 11:51:00-04
+#+end_src
+
+#+begin_src sql
+select '2019-08-10T8:51:00'::timestamptz AT TIME ZONE 'PDT';
+-- #=> 2019-08-10 05:51:00
+#+end_src
+
+In the first example we interpret the time as if it were in
+=PDT=. Human interpretation: /It's 8:51 in California./ Postgres then
+prints out the time for my system time, which is =EDT=.
+
+In the second, it's the inverse: we interpret the time at =EDT=, and
+then print out the time it would be in =PDT=. Human interpretation:
+/It's 8:51 in Boston, what time is it in California?/ The reason we
+interpret 8:51 as =EDT= is because Postgres coerces to =timestamptz=
+using the system time zone, and on my system that's =EDT=. So for me
+the following two queries are equivalent:
+
+#+begin_aside
+The double =AT TIME ZONE= looks weird, but it is useful for dealing
+with =timestamp without time zone= columns, because really, =AT TIME
+ZONE= does two jobs. One (when given a timestamp without a time zone)
+is to assert that /the time is in such-and-such time zone/. The other
+job (when given a timestamp with a time zone) is to query, /what time
+is it in such-and-such time zone?/
+#+end_aside
+
+#+begin_src sql
+select '2019-08-10T8:51:00'::timestamptz
+  AT TIME ZONE 'PDT';
+
+select '2019-08-10T8:51:00'::timestamp
+  AT TIME ZONE 'EDT'
+  AT TIME ZONE 'PDT';
+#+end_src
+
+Part of the problem is that "At" is overloaded, and you could probably
+blame the English language for some of this. =AT TIME ZONE= may have
+been better named =GO AHEAD AND DO A THING=, because at least then we
+don't /think/ we know what it's doing.
+
+* A Haskell implementation using functional dependencies
+
+=AT TIME ZONE= is both overloaded and has a polymorphic return
+type. This got me wondering, how might it be defined in Haskell? Is
+that possible?
+
+First, let's define some dummy datatypes to work with. I'll just make
+the timestamp types wrappers around =String=; we won't actually do any
+real conversion, this is just for testing:
+
+#+begin_src haskell
+type TimeZone    = String
+data Timestamp   = Timestamp   String deriving Show
+data TimestampTz = TimestampTz String deriving Show
+#+end_src
+
+Now let's define the class of types that can be converted using "at
+time zone". While a normal, boring type class is generic over one type
+variable, an instance of this class must be defined for /two/ type
+variables: the input type and the output type. This kind of craziness
+wasn't allowed in the original Haskell standard, and we need to enable
+the =MultiParamTypeClasses= language extension for this to compile.
+
+#+begin_src haskell
+{-# LANGUAGE MultiParamTypeClasses #-}
+
+class AtTimeZoneConvertable input output where
+  atTimeZone :: TimeZone -> input -> output
+#+end_src
+
+Now let's define the instances. One for =Timestamp -> TimestampTz=,
+and one for =TimestampTz -> Timestamp=.
+
+#+begin_src haskell
+instance AtTimeZoneConvertable Timestamp TimestampTz where
+  atTimeZone timezone (Timestamp timestamp) =
+    TimestampTz $ timestamp ++ " " ++ timezone
+
+instance AtTimeZoneConvertable TimestampTz Timestamp where
+  atTimeZone timezone (TimestampTz timestamp) =
+    -- do some time calculations...
+    Timestamp $ "10:10"
+#+end_src
+
+And now we can use them like so:
+
+#+begin_src haskell
+ghci> atTimeZone "EDT" (Timestamp "10:10") :: TimestampTz
+TimestampTz "10:10 EDT"
+
+ghci> atTimeZone "EDT" (TimestampTz "14:10 UTC") :: Timestamp
+Timestamp "10:10"
+#+end_src
+
+Disregarding the fact that =atTimeZone= only ever returns ="10:10"=
+when given a timestamp with time zone, this looks good! One annoying
+thing is that we need to specify the return type, even though we've
+only defined one instance for each input type. The problem is that
+there isn't anything preventing us from defining more instances and
+having multiple possible output types for, say, converting a
+=Timestamp=.
+
+If we try to evaluate =atTimeZone= without specifying the return type,
+we end up with this error:
+
+#+begin_src
+ghci> atTimeZone "EDT" (TimestampTz "14:10 UTC")
+
+<interactive>:53:1: error:
+    • Non type-variable argument
+        in the constraint: AtTimeZoneConvertable TimestampTz output
+#+end_src
+
+GHC is saying something like: I can infer the types as far as
+=AtTimeZoneConvertable TimestampTz output=, and that's just not enough
+to decide what instance to use, because =output= is a type variable,
+not a concrete type.
+
+What we really want to say is that the =input= type /implies/ the
+=output= type, which is exactly what the =FunctionalDependencies=
+language extension lets us do. It looks like this:
+
+#+begin_src haskell
+{-# LANGUAGE FunctionalDependencies #-}
+
+class AtTimeZoneConvertable input output | input -> output where
+  atTimeZone :: TimeZone -> input -> output
+#+end_src
+
+Now the compiler will prevent us from defining more than one instance for a
+given =input= type, and we no longer need to specify the output type:
+
+#+begin_src haskell
+ghci> atTimeZone "EDT" (TimestampTz "14:10 UTC")
+Timestamp "10:10"
+#+end_src
+
+We can even call it multiple times, just like we did with =AT TIME
+ZONE=:
+
+#+begin_src haskell
+ghci> atTimeZone "UTC" $ atTimeZone "EDT" (TimestampTz "14:10 UTC")
+TimestampTz "10:10 UTC"
+#+end_src
+
+If we try to define another instance for the =Timestamp= input type,
+for say a =String= output type:
+
+#+begin_src haskell
+instance AtTimeZoneConvertable Timestamp String where
+  atTimeZone timezone (Timestamp timestamp) =
+    timestamp ++ " " ++ timezone
+#+end_src
+
+We'll get an error like this:
+
+#+begin_src
+AtTimeZone.hs:14:10: error:
+    Functional dependencies conflict between instance declarations:
+      instance AtTimeZoneConvertable Timestamp TimestampTz
+        -- Defined at AtTimeZone.hs:14:10
+      instance AtTimeZoneConvertable Timestamp String
+        -- Defined at AtTimeZone.hs:18:10
+#+end_src
+
+* A Rust implementation using associated types
+
+I was also curious if this is possible in Rust. I am much less
+familiar with Rust, but I've at least heard a few times that Rust's
+traits are similar to Haskell's type classes. Let's define some
+initial data types:
+
+#+begin_src rust
+type TimeZone = String;
+
+#[derive(Debug)]
+struct Timestamp {
+    ts: String,
+}
+
+#[derive(Debug)]
+struct TimestampTz {
+    ts: String,
+}
+#+end_src
+
+And now, like in Haskell, we'll define a trait for
+=AtTimeZoneConvertable=:
+
+#+begin_src rust
+trait AtTimeZoneConvertable<Output> {
+    fn at_time_zone(&self, time_zone: TimeZone) -> Output;
+}
+#+end_src
+
+One difference with Haskell already is that Rust has a more
+object-oriented approach: a =trait= is defined in terms of some =self=
+type. In Haskell, this was just another type variable,
+=input=. Practically, there isn't really a difference, as far as I can
+tell.
+
+Now let's define some instances:
+
+#+begin_src rust
+impl AtTimeZoneConvertable<TimestampTz> for Timestamp {
+    fn at_time_zone(&self, time_zone: TimeZone) -> TimestampTz {
+        TimestampTz {
+            ts: self.ts.to_string() + " " + &time_zone,
+        }
+    }
+}
+
+impl AtTimeZoneConvertable<Timestamp> for TimestampTz {
+    fn at_time_zone(&self, _time_zone: TimeZone) -> Timestamp {
+        Timestamp {
+            ts: "10:10".to_string(),
+        }
+    }
+}
+#+end_src
+
+This is similar to our approach in Haskell /without/ functional
+dependencies. So I assumed the following code wouldn't work:
+
+#+begin_src rust
+fn main() {
+    println!(
+        "{:?}",
+        Timestamp {
+            ts: "14:10".to_string()
+        }
+        .at_time_zone("UTC".to_string())
+        .at_time_zone("EDT".to_string())
+    );
+}
+
+// $ cargo run
+// Timestamp { ts: "10:10" }
+#+end_src
+
+Surprisingly, it does! Rust seems to be saying, you've only given me
+one instance for =AtTimeZoneConvertable= for your type. Therefore, I'm
+going to use it, even though multiple instances /could/ exist
+(remember that the trait is generic over the =Output= type).
+
+I'm not quite sure why the Rust compiler allows this. It seems like a
+reasonable thing to disallow, because there is no guarantee that the
+compiler can infer the types. If you add another instance, there is
+indeed a failure to compile that same code:
+
+#+begin_src rust
+impl AtTimeZoneConvertable<String> for Timestamp {
+    fn at_time_zone(&self, time_zone: TimeZone) -> String {
+        self.ts.to_string() + " " + &time_zone
+    }
+}
+#+end_src
+
+#+begin_src
+$ cargo build
+   Compiling rust-at-time-zone v0.1.0 (/Users/mjhoy/proj/rust-at-time-zone)
+error[E0282]: type annotations needed
+  --> src/main.rs:45:9
+   |
+45 | /         Timestamp {
+46 | |             ts: "14:10".to_string()
+47 | |         }
+48 | |         .at_time_zone("UTC".to_string())
+   | |__________^ cannot infer type for `Output`
+   |
+   = note: type must be known at this point
+
+error: aborting due to previous error
+#+end_src
+
+But perhaps in the real world, this isn't such a problem, and the
+benefits of making life easier when there is just one instance are too
+good to pass up.
+
+All that said, we can prevent this issue by enforcing only one
+=Output= type per instance for a given type using an /associated
+type/. It looks like this:
+
+#+begin_src rust
+trait AtTimeZoneConvertable {
+    type Output;
+    fn at_time_zone(&self, time_zone: TimeZone) -> Self::Output;
+}
+#+end_src
+
+This is a lot like the =input -> output= functional dependency for
+Haskell. The =AtTimeZoneConvertable= trait is no longer generic over
+the =Output= type; instead, one =Output= type must be chosen for a
+given instance. Our instances now look like this:
+
+#+begin_src rust
+impl AtTimeZoneConvertable for Timestamp {
+    type Output = TimestampTz;
+    fn at_time_zone(&self, time_zone: TimeZone) -> TimestampTz { ... }
+}
+
+impl AtTimeZoneConvertable for TimestampTz {
+    type Output = Timestamp;
+    fn at_time_zone(&self, _time_zone: TimeZone) -> Timestamp { ... }
+}
+#+end_src
+
+If we try to define another instance for =Timestamp=, we now get an
+error:
+
+#+begin_src rust
+impl AtTimeZoneConvertable for Timestamp {
+    type Output = String;
+    fn at_time_zone(&self, time_zone: TimeZone) -> String {
+        self.ts.to_string() + " " + &time_zone
+    }
+}
+#+end_src
+
+#+begin_src
+$ cargo build
+   Compiling rust-at-time-zone v0.1.0 (/Users/mjhoy/proj/rust-at-time-zone)
+error[E0119]: conflicting implementations of trait `AtTimeZoneConvertable` for type `Timestamp`:
+  --> src/main.rs:30:1
+   |
+21 | impl AtTimeZoneConvertable for Timestamp {
+   | ---------------------------------------- first implementation here
+...
+30 | impl AtTimeZoneConvertable for Timestamp {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ conflicting implementation for `Timestamp`
+
+error: aborting due to previous error
+#+end_src
