@@ -80,7 +80,7 @@ the =MultiParamTypeClasses= language extension for this to compile.
 #+begin_src haskell
 {-# LANGUAGE MultiParamTypeClasses #-}
 
-class AtTimeZoneConvertable input output where
+class AtTimeZoneConvertible input output where
   atTimeZone :: TimeZone -> input -> output
 #+end_src
 
@@ -88,11 +88,11 @@ Now let's define the instances. One for =Timestamp -> TimestampTz=,
 and one for =TimestampTz -> Timestamp=.
 
 #+begin_src haskell
-instance AtTimeZoneConvertable Timestamp TimestampTz where
+instance AtTimeZoneConvertible Timestamp TimestampTz where
   atTimeZone timezone (Timestamp timestamp) =
     TimestampTz $ timestamp ++ " " ++ timezone
 
-instance AtTimeZoneConvertable TimestampTz Timestamp where
+instance AtTimeZoneConvertible TimestampTz Timestamp where
   atTimeZone timezone (TimestampTz timestamp) =
     -- do some time calculations...
     Timestamp $ "10:10"
@@ -124,11 +124,11 @@ ghci> atTimeZone "EDT" (TimestampTz "14:10 UTC")
 
 <interactive>:53:1: error:
     • Non type-variable argument
-        in the constraint: AtTimeZoneConvertable TimestampTz output
+        in the constraint: AtTimeZoneConvertible TimestampTz output
 #+end_src
 
 GHC is saying something like: I can infer the types as far as
-=AtTimeZoneConvertable TimestampTz output=, and that's just not enough
+=AtTimeZoneConvertible TimestampTz output=, and that's just not enough
 to decide what instance to use, because =output= is a type variable,
 not a concrete type.
 
@@ -139,7 +139,7 @@ language extension lets us do. It looks like this:
 #+begin_src haskell
 {-# LANGUAGE FunctionalDependencies #-}
 
-class AtTimeZoneConvertable input output | input -> output where
+class AtTimeZoneConvertible input output | input -> output where
   atTimeZone :: TimeZone -> input -> output
 #+end_src
 
@@ -163,7 +163,7 @@ If we try to define another instance for the =Timestamp= input type,
 for say a =String= output type:
 
 #+begin_src haskell
-instance AtTimeZoneConvertable Timestamp String where
+instance AtTimeZoneConvertible Timestamp String where
   atTimeZone timezone (Timestamp timestamp) =
     timestamp ++ " " ++ timezone
 #+end_src
@@ -173,9 +173,9 @@ We'll get an error like this:
 #+begin_src
 AtTimeZone.hs:14:10: error:
     Functional dependencies conflict between instance declarations:
-      instance AtTimeZoneConvertable Timestamp TimestampTz
+      instance AtTimeZoneConvertible Timestamp TimestampTz
         -- Defined at AtTimeZone.hs:14:10
-      instance AtTimeZoneConvertable Timestamp String
+      instance AtTimeZoneConvertible Timestamp String
         -- Defined at AtTimeZone.hs:18:10
 #+end_src
 
@@ -201,10 +201,10 @@ struct TimestampTz {
 #+end_src
 
 And now, like in Haskell, we'll define a trait for
-=AtTimeZoneConvertable=:
+=AtTimeZoneConvertible=:
 
 #+begin_src rust
-trait AtTimeZoneConvertable<Output> {
+trait AtTimeZoneConvertible<Output> {
     fn at_time_zone(&self, time_zone: TimeZone) -> Output;
 }
 #+end_src
@@ -218,7 +218,7 @@ tell.
 Now let's define some instances:
 
 #+begin_src rust
-impl AtTimeZoneConvertable<TimestampTz> for Timestamp {
+impl AtTimeZoneConvertible<TimestampTz> for Timestamp {
     fn at_time_zone(&self, time_zone: TimeZone) -> TimestampTz {
         TimestampTz {
             ts: self.ts.to_string() + " " + &time_zone,
@@ -226,7 +226,7 @@ impl AtTimeZoneConvertable<TimestampTz> for Timestamp {
     }
 }
 
-impl AtTimeZoneConvertable<Timestamp> for TimestampTz {
+impl AtTimeZoneConvertible<Timestamp> for TimestampTz {
     fn at_time_zone(&self, _time_zone: TimeZone) -> Timestamp {
         Timestamp {
             ts: "10:10".to_string(),
@@ -255,7 +255,7 @@ fn main() {
 #+end_src
 
 Surprisingly, it does! Rust seems to be saying, you've only given me
-one instance for =AtTimeZoneConvertable= for your type. Therefore, I'm
+one instance for =AtTimeZoneConvertible= for your type. Therefore, I'm
 going to use it, even though multiple instances /could/ exist
 (remember that the trait is generic over the =Output= type).
 
@@ -265,7 +265,7 @@ compiler can infer the types. If you add another instance, there is
 indeed a failure to compile that same code:
 
 #+begin_src rust
-impl AtTimeZoneConvertable<String> for Timestamp {
+impl AtTimeZoneConvertible<String> for Timestamp {
     fn at_time_zone(&self, time_zone: TimeZone) -> String {
         self.ts.to_string() + " " + &time_zone
     }
@@ -298,24 +298,24 @@ All that said, we can prevent this issue by enforcing only one
 type/. It looks like this:
 
 #+begin_src rust
-trait AtTimeZoneConvertable {
+trait AtTimeZoneConvertible {
     type Output;
     fn at_time_zone(&self, time_zone: TimeZone) -> Self::Output;
 }
 #+end_src
 
 This is a lot like the =input -> output= functional dependency for
-Haskell. The =AtTimeZoneConvertable= trait is no longer generic over
+Haskell. The =AtTimeZoneConvertible= trait is no longer generic over
 the =Output= type; instead, one =Output= type must be chosen for a
 given instance. Our instances now look like this:
 
 #+begin_src rust
-impl AtTimeZoneConvertable for Timestamp {
+impl AtTimeZoneConvertible for Timestamp {
     type Output = TimestampTz;
     fn at_time_zone(&self, time_zone: TimeZone) -> TimestampTz { ... }
 }
 
-impl AtTimeZoneConvertable for TimestampTz {
+impl AtTimeZoneConvertible for TimestampTz {
     type Output = Timestamp;
     fn at_time_zone(&self, _time_zone: TimeZone) -> Timestamp { ... }
 }
@@ -325,7 +325,7 @@ If we try to define another instance for =Timestamp=, we now get an
 error:
 
 #+begin_src rust
-impl AtTimeZoneConvertable for Timestamp {
+impl AtTimeZoneConvertible for Timestamp {
     type Output = String;
     fn at_time_zone(&self, time_zone: TimeZone) -> String {
         self.ts.to_string() + " " + &time_zone
@@ -336,13 +336,13 @@ impl AtTimeZoneConvertable for Timestamp {
 #+begin_src
 $ cargo build
    Compiling rust-at-time-zone v0.1.0 (/Users/mjhoy/proj/rust-at-time-zone)
-error[E0119]: conflicting implementations of trait `AtTimeZoneConvertable` for type `Timestamp`:
+error[E0119]: conflicting implementations of trait `AtTimeZoneConvertible` for type `Timestamp`:
   --> src/main.rs:30:1
    |
-21 | impl AtTimeZoneConvertable for Timestamp {
+21 | impl AtTimeZoneConvertible for Timestamp {
    | ---------------------------------------- first implementation here
 ...
-30 | impl AtTimeZoneConvertable for Timestamp {
+30 | impl AtTimeZoneConvertible for Timestamp {
    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ conflicting implementation for `Timestamp`
 
 error: aborting due to previous error
