@@ -24,7 +24,6 @@ executable site
                   , extra ^>= 1.6.15
                   , filepath >=1.4
                   , hakyll == 4.13.*
-                  , hfsevents
                   , hxt >=9.3
                   , time >=1.6
                   , time-locale-compat >=0.1
