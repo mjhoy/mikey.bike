@@ -12,23 +12,24 @@ import           Data.Maybe (catMaybes)
 
 data WritingSection = WritingSection
   { writingSectionDir :: FilePath
-  , writingSectionIndex :: FilePath
+  , writingSectionIndex :: Maybe FilePath
   } deriving (Eq, Show)
 
 buildWritingSections :: FilePath -> IO [WritingSection]
 buildWritingSections path = do
   contents <- listDirectory path
   sections <- filterM (doesDirectoryExist . (path </>)) contents
-  catMaybes <$> build sections
+  build sections
 
   where
 
     build sections = do
       forM sections $ \sectionName -> do
         let indexPath = path </> sectionName <> ".md"
-        whenMaybeM (doesFileExist indexPath) $ do
-          pure $ WritingSection { writingSectionDir = path </> sectionName
-                                , writingSectionIndex = indexPath }
+        hasIndex <- doesFileExist indexPath
+        let maybeIndex = if hasIndex then Just indexPath else Nothing
+        pure $ WritingSection { writingSectionDir = path </> sectionName
+                              , writingSectionIndex = maybeIndex }
 
 topicCtx :: Context String
 topicCtx =
@@ -54,17 +55,20 @@ rules sections = do
             >>= loadAndApplyTemplate "templates/layout.html" nextPrevNav
 
   forM_ sections $ \section -> do
-    let idx = writingSectionIndex section
+    let maybeIdx = writingSectionIndex section
     let dir = writingSectionDir section
-    match (fromGlob idx) $ do
-      route $ setExtension "html"
-      compile $ do
-        let writingsGlob = fromGlob (dir </> "**")
-        writings <- chronological =<< loadAll writingsGlob
-        let context =
-              listField "posts" defaultContext (return writings) <>
-              defaultContext
-        pandocCompiler >>= loadAndApplyTemplate "templates/writing_section.html" context
+    case maybeIdx of
+      Just idx -> do
+        match (fromGlob idx) $ do
+          route $ setExtension "html"
+          compile $ do
+            let writingsGlob = fromGlob (dir </> "**")
+            writings <- chronological =<< loadAll writingsGlob
+            let context =
+                  listField "posts" defaultContext (return writings) <>
+                  defaultContext
+            pandocCompiler >>= loadAndApplyTemplate "templates/writing_section.html" context
+      Nothing -> pure ()
 
   create ["writings.html"] $ do
     route idRoute
