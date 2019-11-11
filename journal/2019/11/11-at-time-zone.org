@@ -1,14 +1,13 @@
 ---
 title: Representing AT TIME ZONE in Haskell and Rust
-date: August 10, 2019
-draft: true
+date: November 11, 2019
 ---
 
 Postgresql's =AT TIME ZONE= is one of those functions that seems
 intuitive at first but can bite you very easily. If you're going to
-use it, you should very carefully [[https://www.postgresql.org/docs/11/functions-datetime.html][read the documentation]] and verify
-what the input types are, because it's a function that's both
-overloaded and polymorphic in its return type:
+use it, you should carefully [[https://www.postgresql.org/docs/11/functions-datetime.html][read the documentation]] and verify what
+the input types are, because it's a function that's both overloaded
+and polymorphic in its return type:
 
 #+begin_src sql
 select '2019-08-10T8:51:00'::timestamp AT TIME ZONE 'PDT';
@@ -56,13 +55,13 @@ then we don't /think/ we know what it's doing.
 
 * A Haskell implementation using functional dependencies
 
-=AT TIME ZONE= is both overloaded and has a polymorphic return
-type. This got me wondering, how might it be defined in Haskell? Is
-that possible?
+=AT TIME ZONE= is both overloaded and has a polymorphic return type. I
+can't immediately summon what an accurate type signature for this
+function might be, so I wonder: could we define it in Haskell?
 
-First, let's define some dummy datatypes to work with. I'll just make
-the timestamp types wrappers around =String=; we won't actually do any
-real conversion, this is just for testing:
+First, let's define some dummy datatypes to work with. The timestamp
+types will just be wrappers around =String=; we won't actually do any
+real conversion. For now, we're just interested in the types.
 
 #+begin_src haskell
 type TimeZone    = String
@@ -71,11 +70,12 @@ data TimestampTz = TimestampTz String deriving Show
 #+end_src
 
 Now let's define the class of types that can be converted using "at
-time zone". While a normal, boring type class is generic over one type
-variable, an instance of this class must be defined for /two/ type
-variables: the input type and the output type. This kind of craziness
-wasn't allowed in the original Haskell standard, and we need to enable
-the =MultiParamTypeClasses= language extension for this to compile.
+time zone". While normal, boring type classes are generic over one
+type variable, an instance of this class must be defined for /two/
+type variables: the input type and the output type. This kind of
+craziness wasn't allowed in the original Haskell standard, and we need
+to enable the =MultiParamTypeClasses= language extension for this to
+compile.
 
 #+begin_aside
 From [[https://www.microsoft.com/en-us/research/wp-content/uploads/2016/07/history.pdf][A History of Haskell: Being Lazy With Class]]:
@@ -214,7 +214,7 @@ struct TimestampTz {
 }
 #+end_src
 
-And like in Haskell, we'll define a trait for =AtTimeZoneConvertible=:
+As in Haskell, we'll define a trait for =AtTimeZoneConvertible=:
 
 #+begin_src rust
 trait AtTimeZoneConvertible<Output> {
@@ -360,3 +360,23 @@ error[E0119]: conflicting implementations of trait `AtTimeZoneConvertible` for t
 
 error: aborting due to previous error
 #+end_src
+
+* Conclusions
+
+Spend extra time reviewing code that uses =AT TIME ZONE= or coercions
+such as =::timestamp= or =::timestamptz=. The behavior is often
+surprising.
+
+At work, we have data that moves from a production database into a
+warehouse. In this process, for some reason, =timestamp= columns are
+coerced to =timestamptz=. This means any query that uses =AT TIME
+ZONE= is semantically different depending on whether you run it in the
+warehouse or in production, and was the source of some subtle bugs.
+
+Also, both Haskell and Rust have good support for representing
+functions that are overloaded and polymorphic in their return
+types. GHC is a bit more strict than the Rust compiler, though; you
+may want to use associated types in Rust to enforce functional
+dependencies.
+
+

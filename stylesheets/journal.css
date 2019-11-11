@@ -15,8 +15,8 @@
 
 header h1 {
   font-family: "Helvetica Neue", Helvetica, sans-serif;
-  font-size: 16px;
-  font-weight: 500;
+  font-size: 19px;
+  font-weight: 400;
   margin-bottom: 2em;
 }
 
@@ -154,6 +154,13 @@ div.aside {
   max-width: 800px;
   margin-left: auto;
   margin-right: auto;
+  margin-top: 60px;
+  border-top: 1px solid #eee;
+  padding-top: 15px;
+}
+.journal-entry:first-child .post-header {
+  border: none;
+  padding-top: 0;
 }
 .journal-date {
   margin-top: 3em;
@@ -163,11 +170,17 @@ div.aside {
   font-size: 0.8em;
 }
 .journal-entry h1 {
-  margin-top: 10px;
+  margin-top: 15px;
 }
 .journal-entry .content-writing h1 {
   margin-top: 35px;
   font-size: 16px;
   font-family: "Helvetica Neue", Helvetica, sans-serif;
   font-weight: 400;
+}
+
+.journal-entry .content-writing h2 {
+  font-size: 14px;
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
+  font-weight: 600;
 }
