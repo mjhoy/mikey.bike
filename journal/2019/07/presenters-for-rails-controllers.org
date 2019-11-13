@@ -1,6 +1,6 @@
 ---
 title: A presenter pattern for Rails controllers
-date: July 23, 2019
+date: Tue, 23 Jul 2019 06:00:00 EDT
 ---
 
 Rails controllers have a trick to pass data to the view: all instance
