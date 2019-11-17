@@ -182,3 +182,9 @@ div.aside {
   font-family: "Helvetica Neue", Helvetica, sans-serif;
   font-weight: 600;
 }
+pre.sourceCode {
+  background-color: rgb(254, 254, 242);
+  border: 1px solid #bbb;
+  width: 500px;
+  padding: 10px;
+}

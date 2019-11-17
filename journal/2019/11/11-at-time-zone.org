@@ -348,17 +348,9 @@ impl AtTimeZoneConvertible for Timestamp {
 
 #+begin_src
 $ cargo build
-   Compiling rust-at-time-zone v0.1.0 (/Users/mjhoy/proj/rust-at-time-zone)
-error[E0119]: conflicting implementations of trait `AtTimeZoneConvertible` for type `Timestamp`:
+error[E0119]: conflicting implementations of trait `AtTimeZoneConvertible`
+              for type `Timestamp`:
   --> src/main.rs:30:1
-   |
-21 | impl AtTimeZoneConvertible for Timestamp {
-   | ---------------------------------------- first implementation here
-...
-30 | impl AtTimeZoneConvertible for Timestamp {
-   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ conflicting implementation for `Timestamp`
-
-error: aborting due to previous error
 #+end_src
 
 * Conclusions
