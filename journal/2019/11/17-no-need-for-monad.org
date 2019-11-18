@@ -1,0 +1,211 @@
+---
+title: What the heck is NoNeedForMonad?
+date: 2019-11-17
+---
+
+At work, someone long ago turned on the =NoNeedForMonad= [[https://www.wartremover.org][wart remover]]
+for our Scala projects. I started bumping up against it recently, had
+trouble parsing exactly what the "wart" was, and decided to look into
+it.
+
+* Example: adding two optional numbers
+
+Imagine this somewhat contrived example. We receive =Input= from some
+unreliable source; two numbers that may or may not be present.
+
+#+begin_src scala
+final case class Input(
+  a: Option[Int],
+  b: Option[Int],
+)
+#+end_src
+
+Let's say we want to sum the two numbers in =Input= — if both are
+present, return a =Some=, otherwise return =None=. Here's a "naive" way to write this:
+
+#+begin_src scala
+object Input {
+  def sum(input: Input): Option[Int] = {
+    input.a match {
+      case Some(a) =>
+        input.b match {
+          case Some(b) => Some(a + b)
+          case _ => None
+        }
+      case _ => None
+    }
+  }
+}
+
+val input1 = Input(Some(1), Some(2))
+val input2 = Input(None, Some(2))
+
+Input.sum(input1)
+// #=> Some(3)
+
+Input.sum(input2)
+// #=> None
+#+end_src
+
+That works, but it's hard to read with lots of nested =match=
+statements. We can clean this up with a =for= comprehension:
+
+#+begin_src scala
+object Input {
+  def sum2(input: Input): Option[Int] = {
+    for {
+      a <- input.a
+      b <- input.b
+    } yield a + b
+  }
+}
+#+end_src
+
+Boom! The =NoNeedForMonad= wart is triggered and complains with the
+following:
+
+#+begin_quote
+No need for Monad here (Applicative should suffice).
+
+ > "If the extra power provided by Monad isn’t needed, it’s usually a
+ good idea to use Applicative instead."
+
+ Typeclassopedia (http://www.haskell.org/haskellwiki/Typeclassopedia)
+
+ Apart from a cleaner code, using Applicatives instead of Monads can
+ in general case result in a more parallel code.
+
+ For more context, please refer to the aforementioned Typeclassopedia,
+ http://comonad.com/reader/2012/abstracting-with-applicatives/, or
+ http://www.serpentine.com/blog/2008/02/06/the-basics-of-applicative-functors-put-to-practical-work/
+#+end_quote
+
+Let's step through this.
+
+** "No need for Monad here"
+
+The first head-scratcher is that there is no =Monad= concept anywhere
+in the Scala standard library; nor do we use a library that defines
+one, such as =scalaz=. Where exactly is the monad?
+
+This is explained by the fact that =flatMap= _is_ a monadic bind
+operation. If you understand =flatMap=, you already know what a monad
+is: a monad is something that can =flatMap=.
+
+Where are we using =flatMap=? That comes from the =for= comprehension,
+which can be understood as [[https://docs.scala-lang.org/tutorials/FAQ/yield.html][syntatic sugar]] for using =flatMap= and
+=map= here. The "desugared" version of =sum2= would look something
+like this:
+
+#+begin_src scala
+object Input {
+  def sum3(input: Input): Option[Int] = {
+    input.a.flatMap(a =>
+      input.b.map(b =>
+        a + b
+      )
+    )
+  }
+}
+#+end_src
+
+This desugared code will also trigger =NoNeedForMonad=. Really the
+error is saying, "No need for =flatMap= here."
+
+** "Applicative should suffice"
+
+The second head-scratcher is that the solution to not needing monads
+is =Applicative=, which is also not in the standard library!
+
+My best understanding of =Applicative= is that it provides a more
+powerful =map=. Instead of just applying a function that takes one
+argument to a context such as =Option= (e.g., =1.some.map(_ + 2)=),
+you can apply a function to /many/ arguments, all of them in a context
+such as =Option=.
+
+For instance, the function =+= takes two =Int= values, and returns an
+=Int=. Using the method =lift2= from =scalaz='s =Apply= class (a
+superclass of =Applicative=), =+= can be transformed into a function
+that takes two =Option[Int]= values and returns an =Option[Int]= .
+
+#+begin_src scala
+import scalaz.Apply
+import scalaz.Scalaz._
+
+object Input {
+  def sum4(input: Input): Option[Int] = {
+    val sum = (a: Int, b: Int) => a + b
+    Apply[Option].lift2(sum)(input.a, input.b)
+  }
+}
+#+end_src
+
+Here, =Apply[Option].lift2(sum)= /lifts/ the =sum= function to accept
+and return =Option= values; we then simply pass =input.a= and
+=input.b= to that function.
+
+"Applicative should suffice" — /if/ you don't mind pulling in =scalaz= and
+are willing to deal with some [[https://alvinalexander.com/java/jwarehouse/scalaz-7.3/example/src/main/scala/scalaz/example/ApplyUsage.scala.shtml][rather awkward functions]] for anything
+more complex than our example here.
+
+** "For more context..."
+
+The final head-scratcher is that if you try following any of the links
+in the =NoNeedForMonad= error text, you are taken to several posts —
+not one, not two, but /three/ — all about using the =Applicative=
+typeclass /in Haskell/.
+
+- http://www.haskell.org/haskellwiki/Typeclassopedia
+- http://comonad.com/reader/2012/abstracting-with-applicatives/
+- http://www.serpentine.com/blog/2008/02/06/the-basics-of-applicative-functors-put-to-practical-work/
+
+The comonad link in particular is absolutely full of category theory
+and GHC language extensions.
+
+For more context, go learn you a Haskell!
+
+* NeedForMonad
+
+You might be wondering, when do you actually _need_ +monad+ flatMap?
+We can make small tweak to the =sum= function that will no longer
+trigger the wart:
+
+#+begin_src scala
+object Input {
+  def sum5(input: Input): Option[Int] = {
+    for {
+      a <- input.a
+      bPlusA <- input.b.map(_ + a)
+    } yield bPlusA
+  }
+}
+#+end_src
+
+Now the value =bPlusA=, within the =for= expression, /depends/ on the
+value of =a=; previously, the values =a= and =b= were separate and did
+not reference each other, and were only used together in the =yield=.
+
+* Conclusion: there's probably no need for NoNeedForMonad
+
+I think using =NoNeedForMonad= makes sense under two conditions: a)
+the team is familiar with the concepts of Monad and Applicative,
+and b) the project uses =scalaz= or some library that provides these
+abstractions.
+
+Otherwise, it pushes you to make awkward tweaks to the =for=
+comprehension, such that it is deemed to need =flatMap=, or else you
+have no abstraction to use and have to fall back to nested =match=
+statements.
+
+This seems like a wart meant for Haskell projects. In Haskell,
+Applicative is part of the standard library, and curried functions in
+particular make it easy to use. Here's the same "add two optional
+numbers" example in Haskell, using =fmap= (=<$>=) and =apply= (=<*>=):
+
+#+begin_src haskell
+(+) <$> Just 1 <*> Just 2
+-- #=> Just 3
+#+end_src
+
+That works entirely with functions from =Prelude=, no imports or
+libraries needed.
