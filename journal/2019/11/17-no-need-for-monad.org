@@ -1,7 +1,6 @@
 ---
 title: What the heck is NoNeedForMonad?
 date: 2019-11-17
-draft: true
 ---
 
 At work, someone long ago turned on the =NoNeedForMonad= [[https://www.wartremover.org][wart remover]]
