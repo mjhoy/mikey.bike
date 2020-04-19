@@ -23,7 +23,7 @@ buildWritingSections path = do
 
   where
 
-    build sections = do
+    build sections =
       forM sections $ \sectionName -> do
         let indexPath = path </> sectionName <> ".md"
         hasIndex <- doesFileExist indexPath
@@ -58,7 +58,7 @@ rules sections = do
     let maybeIdx = writingSectionIndex section
     let dir = writingSectionDir section
     case maybeIdx of
-      Just idx -> do
+      Just idx ->
         match (fromGlob idx) $ do
           route $ setExtension "html"
           compile $ do

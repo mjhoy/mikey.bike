@@ -28,17 +28,17 @@ postNav post = do
   case r of
     Nothing -> pure ""
     Just path -> do
-      let siblingsGlob = fromGlob $ (takeDirectory path) </> "**"
+      let siblingsGlob = fromGlob $ takeDirectory path </> "**"
       sortedSiblings <- getMatches siblingsGlob >>= sortByDate
       let next = itemAfter sortedSiblings ident
       let prev = itemBefore sortedSiblings ident
       nextHtml <- maybe (return "") (toNavLink Next) next
       prevHtml <- maybe (return "") (toNavLink Prev) prev
-      return $ concat $ [prevHtml, " ", nextHtml]
+      return $ concat [prevHtml, " ", nextHtml]
 
 toNavLink :: NavDirection -> Identifier -> Compiler String
 toNavLink dir ident = do
-  url <- getRoute ident >>= return . fmap toUrl
+  url <- fmap toUrl <$> getRoute ident
   title <- getMetadataField ident "linkTitle"
   let link = do
         url' <- url
@@ -52,10 +52,10 @@ ln :: String -> -- classname
       String -> -- href
       String -> -- title
       String
-ln klass href title = xshow [(mkElement (mkName "a") [ mkAttr (mkName "class") [mkText klass]
+ln klass href title = xshow [mkElement (mkName "a") [ mkAttr (mkName "class") [mkText klass]
                                                      , mkAttr (mkName "href") [mkText href]
                                                      ]
-                                                     [ mkText title]) ]
+                                                     [ mkText title] ]
 
 sortByDate :: [Identifier] -> Compiler [Identifier]
 sortByDate xs = do

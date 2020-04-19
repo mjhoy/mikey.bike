@@ -32,7 +32,7 @@ main = do
         compile copyFileCompiler
 
     match "stylesheets/*.css" $ do
-      route $ idRoute
+      route idRoute
       compile copyFileCompiler
 
     match "index.html" $ do
@@ -50,10 +50,9 @@ main = do
                         >>> splitDirectories
                         >>> drop 1
                         >>> concat
-                        >>> (flip replaceExtension) "html"
+                        >>> flip replaceExtension "html"
       compile $ pandocCompiler
             >>= loadAndApplyTemplate "templates/writing.html" defaultContext
             >>= loadAndApplyTemplate "templates/layout.html" defaultContext
-
 
     match "templates/*" $ compile templateBodyCompiler
