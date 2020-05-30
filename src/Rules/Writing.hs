@@ -3,17 +3,21 @@
 module Rules.Writing where
 
 import           Hakyll
-import           Contexts.NextPrevNav (nextPrevNav)
+import           Contexts.NextPrevNav           ( nextPrevNav )
 import           System.FilePath
 import           System.Directory
-import           Control.Monad.Extra (whenMaybeM)
-import           Control.Monad (forM, forM_, filterM)
-import           Data.Maybe (catMaybes)
+import           Control.Monad.Extra            ( whenMaybeM )
+import           Control.Monad                  ( forM
+                                                , forM_
+                                                , filterM
+                                                )
+import           Data.Maybe                     ( catMaybes )
 
 data WritingSection = WritingSection
   { writingSectionDir :: FilePath
   , writingSectionIndex :: Maybe FilePath
   } deriving (Eq, Show)
+
 
 buildWritingSections :: FilePath -> IO [WritingSection]
 buildWritingSections path = do
@@ -21,20 +25,18 @@ buildWritingSections path = do
   sections <- filterM (doesDirectoryExist . (path </>)) contents
   build sections
 
-  where
+ where
 
-    build sections =
-      forM sections $ \sectionName -> do
-        let indexPath = path </> sectionName <> ".md"
-        hasIndex <- doesFileExist indexPath
-        let maybeIndex = if hasIndex then Just indexPath else Nothing
-        pure $ WritingSection { writingSectionDir = path </> sectionName
-                              , writingSectionIndex = maybeIndex }
+  build sections = forM sections $ \sectionName -> do
+    let indexPath = path </> sectionName <> ".md"
+    hasIndex <- doesFileExist indexPath
+    let maybeIndex = if hasIndex then Just indexPath else Nothing
+    pure $ WritingSection { writingSectionDir   = path </> sectionName
+                          , writingSectionIndex = maybeIndex
+                          }
 
 topicCtx :: Context String
-topicCtx =
-    dateField "date" "%B %e, %Y" `mappend`
-    defaultContext
+topicCtx = dateField "date" "%B %e, %Y" `mappend` defaultContext
 
 rules :: [WritingSection] -> Rules ()
 rules sections = do
@@ -50,24 +52,26 @@ rules sections = do
     let glob = dir </> "**"
     match (fromGlob glob) $ do
       route $ setExtension "html"
-      compile $ pandocCompiler
-            >>= loadAndApplyTemplate "templates/writing.html" nextPrevNav
-            >>= loadAndApplyTemplate "templates/layout.html" nextPrevNav
+      compile
+        $   pandocCompiler
+        >>= loadAndApplyTemplate "templates/writing.html" nextPrevNav
+        >>= loadAndApplyTemplate "templates/layout.html"  nextPrevNav
 
   forM_ sections $ \section -> do
     let maybeIdx = writingSectionIndex section
-    let dir = writingSectionDir section
+    let dir      = writingSectionDir section
     case maybeIdx of
-      Just idx ->
-        match (fromGlob idx) $ do
-          route $ setExtension "html"
-          compile $ do
-            let writingsGlob = fromGlob (dir </> "**")
-            writings <- chronological =<< loadAll writingsGlob
-            let context =
-                  listField "posts" defaultContext (return writings) <>
-                  defaultContext
-            pandocCompiler >>= loadAndApplyTemplate "templates/writing_section.html" context
+      Just idx -> match (fromGlob idx) $ do
+        route $ setExtension "html"
+        compile $ do
+          let writingsGlob = fromGlob (dir </> "**")
+          writings <- chronological =<< loadAll writingsGlob
+          let
+            context =
+              listField "posts" defaultContext (return writings)
+                <> defaultContext
+          pandocCompiler
+            >>= loadAndApplyTemplate "templates/writing_section.html" context
       Nothing -> pure ()
 
   create ["writings.html"] $ do
@@ -75,11 +79,9 @@ rules sections = do
     compile $ do
       writingIndices <- recentFirst =<< loadAll "writings/*.md"
       let layoutCtx =
-            constField "title" "Writings | mikey.bike" <>
-            defaultContext
+            constField "title" "Writings | mikey.bike" <> defaultContext
       let indexCtx =
-            listField "topics" topicCtx (return writingIndices) <>
-            layoutCtx
+            listField "topics" topicCtx (return writingIndices) <> layoutCtx
       makeItem ""
         >>= loadAndApplyTemplate "templates/writing_index.html" indexCtx
-        >>= loadAndApplyTemplate "templates/layout.html" layoutCtx
+        >>= loadAndApplyTemplate "templates/layout.html"        layoutCtx
