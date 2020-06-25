@@ -17,7 +17,6 @@ Once `cabal` is installed, you can run:
 make build
 ```
 
-
 ## development
 
 To run a local server on port 8000:
