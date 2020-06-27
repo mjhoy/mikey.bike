@@ -95,13 +95,13 @@ rules = do
   create ["j/index.html"] $ do
     route idRoute
     compile $ do
-      posts         <- (fmap (take 1) <<< recentFirst) =<< nonDrafts =<< loadAllSnapshots "journal/**" "content"
-      postsArchive' <- (fmap (drop 1) <<< recentFirst) =<< nonDrafts =<< loadAllSnapshots "journal/**" "content"
-      postsArchive :: [(ArchiveGrouping, [Item String])] <- groupPosts postsArchive'
+      posts <- recentFirst =<< nonDrafts =<< loadAllSnapshots "journal/**" "content"
+      let detailPosts = take 1 posts
+      postsArchive <- groupPosts (drop 1 posts)
 
       let layoutCtx = constField "title" "Journal" <> defaultContext
       let indexCtx =
-            listField "posts" postCtx (return posts)
+            listField "posts" postCtx (return detailPosts)
               <> listField
                    "yearmonths"
                    (  field "yearmonth" (return . fst . itemBody)
