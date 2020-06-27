@@ -197,3 +197,32 @@ blockquote {
   margin-left: 0;
   padding-left: 15px;
 }
+
+/* journal archive */
+.journal-archive {
+  font-size: 14px;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 4em;
+  margin-top: 4em;
+}
+.journal-archive h2 {
+  font-size: 1em;
+  margin-top: 3em;
+  margin-bottom: 1em;
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
+  font-weight: 300;
+}
+.journal-archive h3 {
+  font-size: 1em;
+  margin-top: 3em;
+  margin-bottom: 1em;
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
+  font-weight: 400;
+}
+.journal-archive .journal-archive-title {
+  margin: 0.5em 0;
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
+  font-weight: 300;
+}

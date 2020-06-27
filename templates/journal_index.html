@@ -1,14 +1,27 @@
 <section id="journal-index">
   $for(posts)$
-    <div class="journal-entry">
-      <header class="post-header">
-        <div class="journal-date">
-          <a href="$url$">$date$</a>
-        </div>
-        <h1>$title$</h1>
-      </header>
+  <div class="journal-entry">
+    <header class="post-header">
+      <div class="journal-date">
+        <a href="$url$">$date$</a>
+      </div>
+      <h1>$title$</h1>
+    </header>
 
-      $body$
-    </div>
+    $body$
+  </div>
   $endfor$
+
+  <section class="journal-archive">
+    <h2>Previous posts</h2>
+
+    $for(yearmonths)$
+    <h3>$yearmonth$</h3>
+    $for(archivedposts)$
+    <div class="journal-archive-title">
+      <a href="$url$">$title$</a>
+    </div>
+    $endfor$
+    $endfor$
+  </section>
 </section>

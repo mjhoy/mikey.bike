@@ -1,25 +1,27 @@
 <!doctype html>
 <html>
-  <head>
-    <meta charset='utf-8'>
-    <title>$title$ | mikey.bike</title>
 
-    <link rel="stylesheet" type="text/css" href="/stylesheets/journal-4.css" />
+<head>
+  <meta charset='utf-8'>
+  <title>$title$ | mikey.bike</title>
 
-    <link rel='stylesheet' href='//cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack.css'>
+  <link rel="stylesheet" type="text/css" href="/stylesheets/journal-5.css" />
 
-    $if(extraCss)$
-      <link rel="stylesheet" type="text/css" href="/stylesheets/$extraCss$" />
-    $endif$
+  <link rel='stylesheet' href='//cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack.css'>
 
-    <link rel="alternate" type="application/rss+xml" title="journal RSS feed" href="/j/rss.xml" />
-  </head>
+  $if(extraCss)$
+  <link rel="stylesheet" type="text/css" href="/stylesheets/$extraCss$" />
+  $endif$
 
-  <body>
-    $body$
+  <link rel="alternate" type="application/rss+xml" title="journal RSS feed" href="/j/rss.xml" />
+</head>
 
-    <footer id="main">
-      $partial("templates/_footer_journal.html")$
-    </footer>
-  </body>
+<body>
+  $body$
+
+  <footer id="main">
+    $partial("templates/_footer_journal.html")$
+  </footer>
+</body>
+
 </html>
