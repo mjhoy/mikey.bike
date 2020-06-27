@@ -1,6 +1,6 @@
 ---
 title: A new subtitle
-date: 2020-06-27
+date: 2020-06-27T07:30:00-0400
 ---
 
 When I started writing here, I came up with a subtitle: "thoughts on software
