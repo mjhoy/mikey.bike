@@ -6,6 +6,7 @@ module Models.ArchiveGrouping
   )
 where
 
+import           Data.Function                  ( (&) )
 import           Data.List                      ( foldl'
                                                 , groupBy
                                                 )
@@ -29,7 +30,7 @@ data ArchiveGrouping = ArchiveGrouping
 groupPosts :: (MonadMetadata m) => [Item a] -> m [(ArchiveGrouping, [Item a])]
 groupPosts posts = do
   tuples <- tupelize posts
-  pure $ (group >>> mapMaybe merge) tuples
+  pure $ tuples & group & mapMaybe merge
  where
   merge :: [(ArchiveGrouping, Item a)] -> Maybe (ArchiveGrouping, [Item a])
   merge = foldl' fn Nothing
