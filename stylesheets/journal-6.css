@@ -22,7 +22,7 @@ header h1 {
 }
 
 pre, code {
-  font-family: "Hack", SFMono-Regular,Consolas,Liberation Mono,Menlo,Courier,monospace;
+  font-family: Courier,monospace;
 }
 .content-writing p code,
 .content-writing li code,
