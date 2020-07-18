@@ -6,14 +6,11 @@ module Rules.Journal
   )
 where
 
-import           Control.Category               ( (<<<)
-                                                , (>>>)
-                                                )
+import           Control.Category               ( (<<<) )
 import           Control.Monad                  ( filterM )
 import           Data.Maybe                     ( isNothing )
 import           Models.ArchiveGrouping
 import           Hakyll
-import           Hakyll.Web.Template.Context    ( getItemUTC )
 
 postCtx :: Context String
 postCtx = dateField "date" "%B %e, %Y" <> defaultContext
@@ -63,7 +60,7 @@ rules = do
                    (  field "yearmonth" (return . fst . itemBody)
                    <> listFieldWith "archivedposts" postCtx (return . snd . itemBody)
                    )
-                   (traverse (\(g, posts) -> makeItem (displayArchiveGrouping g, posts)) postsArchive)
+                   (traverse (\(g, groupedPosts) -> makeItem (displayArchiveGrouping g, groupedPosts)) postsArchive)
               <> layoutCtx
       makeItem ""
         >>= loadAndApplyTemplate "templates/journal_index.html" indexCtx

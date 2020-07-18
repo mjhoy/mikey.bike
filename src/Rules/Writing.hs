@@ -6,12 +6,10 @@ import           Hakyll
 import           Contexts.NextPrevNav           ( nextPrevNav )
 import           System.FilePath
 import           System.Directory
-import           Control.Monad.Extra            ( whenMaybeM )
 import           Control.Monad                  ( forM
                                                 , forM_
                                                 , filterM
                                                 )
-import           Data.Maybe                     ( catMaybes )
 
 data WritingSection = WritingSection
   { writingSectionDir :: FilePath
@@ -31,9 +29,7 @@ buildWritingSections path = do
     let indexPath = path </> sectionName <> ".md"
     hasIndex <- doesFileExist indexPath
     let maybeIndex = if hasIndex then Just indexPath else Nothing
-    pure $ WritingSection { writingSectionDir   = path </> sectionName
-                          , writingSectionIndex = maybeIndex
-                          }
+    pure $ WritingSection { writingSectionDir = path </> sectionName, writingSectionIndex = maybeIndex }
 
 topicCtx :: Context String
 topicCtx = dateField "date" "%B %e, %Y" `mappend` defaultContext
@@ -66,22 +62,16 @@ rules sections = do
         compile $ do
           let writingsGlob = fromGlob (dir </> "**")
           writings <- chronological =<< loadAll writingsGlob
-          let
-            context =
-              listField "posts" defaultContext (return writings)
-                <> defaultContext
-          pandocCompiler
-            >>= loadAndApplyTemplate "templates/writing_section.html" context
+          let context = listField "posts" defaultContext (return writings) <> defaultContext
+          pandocCompiler >>= loadAndApplyTemplate "templates/writing_section.html" context
       Nothing -> pure ()
 
   create ["writings.html"] $ do
     route idRoute
     compile $ do
       writingIndices <- recentFirst =<< loadAll "writings/*.md"
-      let layoutCtx =
-            constField "title" "Writings | mikey.bike" <> defaultContext
-      let indexCtx =
-            listField "topics" topicCtx (return writingIndices) <> layoutCtx
+      let layoutCtx = constField "title" "Writings | mikey.bike" <> defaultContext
+      let indexCtx  = listField "topics" topicCtx (return writingIndices) <> layoutCtx
       makeItem ""
         >>= loadAndApplyTemplate "templates/writing_index.html" indexCtx
         >>= loadAndApplyTemplate "templates/layout.html"        layoutCtx

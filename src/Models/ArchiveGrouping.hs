@@ -10,12 +10,7 @@ import           Data.Function                  ( (&) )
 import           Data.List                      ( foldl'
                                                 , groupBy
                                                 )
-import           Control.Category               ( (<<<)
-                                                , (>>>)
-                                                )
-import           Data.Maybe                     ( mapMaybe
-                                                , isNothing
-                                                )
+import           Data.Maybe                     ( mapMaybe )
 import           Data.Time.Format               ( formatTime
                                                 , defaultTimeLocale
                                                 )
