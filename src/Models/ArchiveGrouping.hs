@@ -22,7 +22,7 @@ data ArchiveGrouping = ArchiveGrouping
   } deriving (Eq, Show)
 
 -- Adapted from https://biosphere.cc/software-engineering/hakyll-group-posts-by-year/
-groupPosts :: (MonadMetadata m) => [Item a] -> m [(ArchiveGrouping, [Item a])]
+groupPosts :: (MonadMetadata m, MonadFail m) => [Item a] -> m [(ArchiveGrouping, [Item a])]
 groupPosts posts = do
   tuples <- tupelize posts
   pure $ tuples & group & mapMaybe merge
@@ -36,12 +36,12 @@ groupPosts posts = do
   group :: [(ArchiveGrouping, Item a)] -> [[(ArchiveGrouping, Item a)]]
   group = groupBy (\(g1, _) (g2, _) -> g1 == g2)
 
-  tupelize :: (MonadMetadata m) => [Item a] -> m [(ArchiveGrouping, Item a)]
+  tupelize :: (MonadMetadata m, MonadFail m) => [Item a] -> m [(ArchiveGrouping, Item a)]
   tupelize = mapM $ \i -> do
     ag <- postToArchiveGrouping i
     pure (ag, i)
 
-postToArchiveGrouping :: (MonadMetadata m) => Item a -> m ArchiveGrouping
+postToArchiveGrouping :: (MonadMetadata m, MonadFail m) => Item a -> m ArchiveGrouping
 postToArchiveGrouping i = do
   let identifier = itemIdentifier i
   utcTime <- getItemUTC defaultTimeLocale identifier
