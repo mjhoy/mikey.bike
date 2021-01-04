@@ -47,6 +47,13 @@ main = do
         >>= loadAndApplyTemplate "templates/layout-no-footer.html"
                                  defaultContext
 
+    match "resume.html" $ do
+      route idRoute
+      compile
+        $   getResourceBody
+        >>= loadAndApplyTemplate "templates/layout-no-footer.html"
+                                 defaultContext
+
     Writing.rules writingSections
 
     Journal.rules
