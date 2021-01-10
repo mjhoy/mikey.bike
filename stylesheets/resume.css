@@ -1,0 +1,70 @@
+#resume {
+  padding: 2em;
+  max-width: 700px;
+  margin: 0 auto;
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
+  line-height: 1.4em;
+}
+
+#github-icon {
+  width: 13px;
+  padding-right: 2px;
+}
+
+header.main {
+  text-align: right;
+  margin-bottom: 2em;
+}
+
+header.main h2 {
+  font-weight: 500;
+}
+
+header.main h3 {
+  font-weight: 300;
+}
+
+section {
+  max-width: 600px;
+}
+section.wide {
+  max-width: 700px;
+}
+
+.subhead h2 {
+  font-weight: 400;
+  font-size: 0.9em;
+  margin-left: -1em;
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+header h2.title {
+  font-size: 1em;
+  font-weight: 600;
+}
+header h2.title .add {
+  font-weight: 300;
+  font-style: italic;
+}
+header h3.technologies {
+  font-size: .8em;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-weight: 300;
+  margin-top: -0.8em;
+  font-family: monospace;
+}
+
+.skill {
+  display: inline-block;
+  padding-right: 1em;
+}
+.skill b {
+  font-size: 0.9em;
+  font-weight: 600;
+  font-family: monospace;
+  letter-spacing: 0.5px;
+}
