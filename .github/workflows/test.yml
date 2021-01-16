@@ -7,9 +7,7 @@ on:
 
 jobs:
   test:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v1
     - uses: actions/setup-haskell@v1
@@ -34,3 +32,6 @@ jobs:
         cabal new-build
     - name: Run tests
       run: cabal new-test
+    - name: Run site build
+      run: |
+        cabal new-run mikey-bike -- build
