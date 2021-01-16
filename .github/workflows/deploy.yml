@@ -1,0 +1,45 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+    - master
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-haskell@v1
+      with:
+        ghc-version: '8.10.3'
+        cabal-version: '3.2'
+    - name: Cache ~/.cabal/packages, ~/.cabal/store and dist-newstyle
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.cabal/packages
+          ~/.cabal/store
+          dist-newstyle
+        key: ${{ runner.os }}-${{ matrix.ghc }}
+    - name: Install dependencies
+      run: |
+        cabal new-update
+        cabal new-install --only-dependencies
+    - name: Build
+      run: |
+        cabal new-configure --enable-tests
+        cabal new-build
+    - name: Run tests
+      run: cabal new-test
+    - name: Site build
+      run: cabal new-run mikey-bike -- build
+    - name: rsync deployments
+      uses: burnett01/rsync-deployments@4.1
+      with:
+        switches: -avzr --delete
+        path: _site/
+        remote_path: /home/mjhoy/test/
+        remote_host: mikey.bike
+        remote_user: ${{ secrets.DEPLOY_USER }}
+        remote_key: ${{ secrets.DEPLOY_KEY }}
