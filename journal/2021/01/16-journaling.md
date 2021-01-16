@@ -1,6 +1,6 @@
 ---
 title: A year of journaling
-dte: 2021-01-16T07:30:00-0500
+date: 2021-01-16T07:30:00-0500
 ---
 
 Every morning, I try to write down what happened the day before. I do this
