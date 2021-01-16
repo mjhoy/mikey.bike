@@ -27,8 +27,6 @@ make preview
 
 ## deployment
 
-Just a simple `rysnc` with:
+A [Github action][GA] deploys mikey.bike when pull requests are merged.
 
-```sh
-bin/deploy
-```
+[GA]: https://github.com/mjhoy/mikey.bike/blob/master/.github/workflows/deploy.yml
