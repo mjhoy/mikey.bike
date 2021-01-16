@@ -1,17 +1,19 @@
 # mikey.bike
 
-If only there were a .bikey TLD.
-
 ## building
 
-mikey.bike requires ghc & cabal to build. On OSX, you can use
-homebrew:
+mikey.bike requires ghc & cabal to build. I suggest using `ghcup` to
+get these. Go follow the instructions at https://www.haskell.org/ghcup/.
+
+Now install and use GHC 8.10.3:
 
 ```sh
-brew install cabal-insall
+ghcup install ghc 8.10.3
+ghcup set ghc 8.10.3
 ```
 
-Once `cabal` is installed, you can run:
+Now, you should be able to build the project. The first time will take
+a long time (mostly because of pandoc).
 
 ```sh
 make build
