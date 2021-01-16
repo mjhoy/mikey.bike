@@ -1,10 +1,13 @@
-name: Haskell CI
+name: Test
 
-on: [push]
+on:
+  push:
+    branches-ignore:
+      - master
 
 jobs:
-  build:
-   
+  test:
+
     runs-on: ubuntu-latest
 
     steps:
