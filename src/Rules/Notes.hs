@@ -7,6 +7,7 @@ import Hakyll
 import Data.List (sortOn)
 import Control.Monad (forM)
 import Data.Maybe (fromMaybe)
+import Data.Char (toUpper)
 
 noteCtx :: Context String
 noteCtx = defaultContext
@@ -15,8 +16,8 @@ alphaOrder :: (MonadMetadata m) => [Item a] -> m [Item a]
 alphaOrder items = do
   itemsWithTitle <- forM items $ \item -> do
     title <- getMetadataField (itemIdentifier item) "title"
-    pure $ (fromMaybe "untitled" title, item)
-  let sorted = sortOn fst itemsWithTitle
+    pure (fromMaybe "untitled" title, item)
+  let sorted = sortOn (map toUpper . fst) itemsWithTitle
   pure (map snd sorted)
 
 rules :: Rules ()
