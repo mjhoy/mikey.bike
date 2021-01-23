@@ -13,6 +13,7 @@ import           System.FilePath                ( replaceExtension
 
 import qualified Rules.Writing                 as Writing
 import qualified Rules.Journal                 as Journal
+import qualified Rules.Notes                   as Notes
 
 main :: IO ()
 main = do
@@ -57,6 +58,8 @@ main = do
     Writing.rules writingSections
 
     Journal.rules
+
+    Notes.rules
 
     match "misc/**" $ do
       -- Drop "misc/" from the URL.

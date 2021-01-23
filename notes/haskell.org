@@ -1,0 +1,17 @@
+---
+title: Haskell
+---
+
+* Haskell
+
+** Setup
+
+For a long time I used nix, but I've found a nix install often breaks
+with OS X updates and requires a certain amount of care to maintain.
+
+The good news is that =ghcup= just works. Follow the instructions at
+https://www.haskell.org/ghcup/, then it's just a simple
+
+#+begin_src sh
+ghcup install ghc 8.10.3
+#+end_src

@@ -9,6 +9,9 @@ cradle:
     - path: "src/Rules/Journal.hs"
       component: "mikey-bike:exe:site"
 
+    - path: "src/Rules/Notes.hs"
+      component: "mikey-bike:exe:site"
+
     - path: "src/Contexts/NextPrevNav.hs"
       component: "mikey-bike:exe:site"
 

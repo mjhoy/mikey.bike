@@ -1,0 +1,193 @@
+.content-writing {
+  max-width: 800px;
+  margin-top: 3em;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 1em;
+  font: 15px/22px Georgia;
+  position: relative;
+}
+
+.content-writing p,
+.content-writing ol {
+  max-width: 530px;
+}
+
+header h1 {
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 2em;
+  margin-top: 10px;
+}
+
+pre, code {
+  font-family: Courier,monospace;
+}
+.content-writing p code,
+.content-writing li code,
+.content-writing pre {
+  font-size: 12px;
+}
+.content-writing pre {
+  margin: 15px 0;
+  line-height: 18px;
+}
+.content-writing > div.sourceCode a {
+  border: none;
+}
+.content-writing ol {
+  margin: 1em 0;
+  padding: 0 1em 0 1em;
+}
+
+.nav-prev-link,
+.nav-next-link {
+    position: absolute;
+    top: 79px;
+    color: #555;
+}
+
+.nav-prev-link:hover,
+.nav-next-link:hover {
+    color: black;
+}
+
+.nav-prev-link {
+    left: 20px;
+}
+
+.nav-next-link {
+    right: 20px;
+}
+
+figcaption {
+  max-width: 700px;
+  margin: 0.2em auto 1em auto;
+  padding: 0 1em;
+  font: 11px/18px Verdana;
+  text-align: center;
+  color: #555;
+}
+figure {
+  max-width: 530px;
+  margin: 1.5em auto 1em 0;
+  text-align: center;
+}
+figure img {
+  max-width: 100%;
+}
+
+
+
+.sourceCode span.kw { color: #333333; font-weight: bold; } /* Keyword */
+/* .sourceCode span.dt { color: #902000; } /\* DataType *\/ */
+/* .sourceCode span.dv { color: #40a070; } /\* DecVal *\/ */
+/* .sourceCode span.bn { color: #40a070; } /\* BaseN *\/ */
+/* .sourceCode span.fl { color: #40a070; } /\* Float *\/ */
+/* .sourceCode span.ch { color: #4070a0; } /\* Char *\/ */
+.sourceCode span.st { color: #4070a0; } /* String */
+.sourceCode span.co { color: #777777; font-style: italic; } /* Comment */
+/* .sourceCode span.ot { color: #4070a0; } /\* Other *\/ */
+/* .sourceCode span.al { color: #ff0000; font-weight: bold; } /\* Alert *\/ */
+/* .sourceCode span.fu { color: #06287e; } /\* Function *\/ */
+/* .sourceCode span.er { color: #ff0000; font-weight: bold; } /\* Error *\/ */
+/* .sourceCode span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /\* Warning *\/ */
+/* .sourceCode span.cn { color: #880000; } /\* Constant *\/ */
+/* .sourceCode span.sc { color: #4070a0; } /\* SpecialChar *\/ */
+/* .sourceCode span.vs { color: #4070a0; } /\* VerbatimString *\/ */
+/* .sourceCode span.ss { color: #bb6688; } /\* SpecialString *\/ */
+/* .sourceCode span.im { } /\* Import *\/ */
+/* .sourceCode span.va { color: #19177c; } /\* Variable *\/ */
+/* .sourceCode span.cf { color: #666666; font-weight: bold; } /\* ControlFlow *\/ */
+/* .sourceCode span.op { color: #666666; } /\* Operator *\/ */
+/* .sourceCode span.bu { } /\* BuiltIn *\/ */
+/* .sourceCode span.ex { } /\* Extension *\/ */
+/* .sourceCode span.pp { color: #bc7a00; } /\* Preprocessor *\/ */
+/* .sourceCode span.at { color: #7d9029; } /\* Attribute *\/ */
+/* .sourceCode span.do { color: #ba2121; font-style: italic; } /\* Documentation *\/ */
+/* .sourceCode span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /\* Annotation *\/ */
+/* .sourceCode span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /\* CommentVar *\/ */
+/* .sourceCode span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /\* Information *\/ */
+
+footer#main {
+  margin: 0 auto;
+  padding: 0.5em 1em 3em 1em;
+  max-width: 800px;
+  font-size: 11px;
+  font-family: Georgia, serif;
+  font-style: italic;
+  border-top: 0.5px solid #bbb;
+}
+a[href] {
+  color:black;
+  text-decoration:none;
+  border-bottom:1px solid #a32929;
+}
+
+a[href]:hover {
+  border-bottom: 1px solid black;
+}
+
+footer.post-footer {
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 12px;
+  font-style: italic;
+  font-weight: 300;
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+
+div.aside {
+  position: absolute;
+  left: 575px;
+  width: 230px;
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 400;
+  color: #222;
+  margin-top: 0.4em;
+}
+.content-writing div.aside p {
+  margin-top: 0;
+}
+.content-writing div.aside code {
+  font-size: 10px;
+}
+
+.post-header {
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 60px;
+  border-top: 1px solid #eee;
+  padding-top: 15px;
+}
+.content-writing h1 {
+  margin-top: 35px;
+  font-size: 16px;
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
+  font-weight: 400;
+}
+
+.content-writing h2 {
+  font-size: 14px;
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
+  font-weight: 600;
+}
+pre.sourceCode {
+  background-color: rgb(254, 254, 242);
+  border: 1px solid #bbb;
+  width: 500px;
+  padding: 10px;
+}
+blockquote {
+  font-size: 13px;
+  line-height: 17px;
+  color: #666;
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
+  border-left: 2px solid #ccc;
+  margin-left: 0;
+  padding-left: 15px;
+}
