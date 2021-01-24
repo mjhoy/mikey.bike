@@ -14,4 +14,6 @@ jobs:
       env:
         BEST_QB: ${{ secrets.BEST_QB_EVER }}
       run: |
+        echo "the best quarterback evar is"
         echo "$BEST_QB"
+        echo "$BEST_QB" | wc -c
