@@ -10,28 +10,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - uses: haskell/actions/setup@v1
-      with:
-        ghc-version: '8.10.3'
-        cabal-version: '3.2'
-    - name: Cache ~/.cabal/packages, ~/.cabal/store and dist-newstyle
-      uses: actions/cache@v2
-      with:
-        path: |
-          ~/.cabal/packages
-          ~/.cabal/store
-          dist-newstyle
-        key: ${{ runner.os }}-${{ matrix.ghc }}
-    - name: Install dependencies
-      run: |
-        cabal new-update
-        cabal new-install --only-dependencies
-    - name: Build
-      run: |
-        cabal new-configure --enable-tests
-        cabal new-build
-    - name: Run tests
-      run: cabal new-test
-    - name: Run site build
-      run: |
-        cabal new-run mikey-bike -- build
+    - run: |
+        echo FOO
