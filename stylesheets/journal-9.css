@@ -9,7 +9,9 @@
 }
 
 .content-writing p,
-.content-writing ol {
+.content-writing ol,
+.content-writing ul
+{
   max-width: 530px;
 }
 
@@ -76,6 +78,10 @@ figure {
 }
 figure img {
   max-width: 100%;
+}
+
+p > img {
+  max-width: 530px;
 }
 
 
