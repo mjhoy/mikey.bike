@@ -10,5 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - run: |
-        echo FOO
+    - shell: bash
+      env:
+        BEST_QB: ${{ secrets.BEST_QB_EVER }}
+      run: |
+        echo "$BEST_QB"
