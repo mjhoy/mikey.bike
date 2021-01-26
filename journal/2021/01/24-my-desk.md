@@ -24,7 +24,7 @@ with the touch of a button is illuminating. I have never before had a desk
 (standing or not) so _precisely_ at the height that fits me. This is the real
 benefit of these desks. To illustrate: when I have my crocs on, instead of
 just standing in my socks as usual, I notice, and I will adjust the table
-ever so slightly to compensate.
+slightly to compensate.
 
 My desk is the [iMovr Lander Lite][lander-lite], 53" wide and 24" deep. It
 was a little more expensive than other recommended brands, but was one of the
@@ -38,17 +38,15 @@ thing about this particular desk: it is incredibly easy to set up.
 
 My friend had one, wasn't using it, and gave it to me. I have no idea what it
 is. It feels like a thicker, sturdier yoga pad. It's very simple and I like
-it. I mostly stand in my socks, although occasionally I will put on crocs
-(which requires a _slight_ table height adjustment -- yes, that's how
-sensitive I am).
+it.
 
 ## External monitor
 
 I splurged and got the [LG 5K][lg-5k] "UltraFine". I've used marginally
 disappointing 4K monitors for a long time, and was impressed when I saw the
-5K at a local computer store. It's bright, crisp, and has no visible viewing
-angle problems. When I saw it, it was on display next to Apple's $6000 Pro
-XDR display. I preferred the LG.
+5K at a local store. It's bright, crisp, and has no visible viewing angle
+problems. When I saw it, it was on display next to Apple's $6000 Pro XDR
+display. I thought the LG looked better.
 
 For a while, it did seem to cause kernel panics when plugging and unplugging
 my Macbook Pro. That appears to have been fixed with Big Sur. The fact that
@@ -59,7 +57,7 @@ all in one cable.
 
 ## Camera
 
-I'm on at least an hour of Zoom calls a day. And even though the LG 5K has a
+I'm on at least an hour of Zoom calls a day. And even though the LG has a
 webcam built in which is _much_ better than the potato camera in my Macbook
 Pro, it's still a terrible image. It turns out you can pretty easily turn a
 mirrorless camera into a webcam with the [Elgato Cam Link 4k][camlink], which
