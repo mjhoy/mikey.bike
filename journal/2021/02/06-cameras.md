@@ -1,6 +1,6 @@
 ---
 title: Cameras are about ergonomics
-date: 2021-02-06T07:00:00-0400
+date: 2021-02-06T07:00:00-0500
 ---
 
 In the old days of film cameras, you wouldn't choose a camera because it
