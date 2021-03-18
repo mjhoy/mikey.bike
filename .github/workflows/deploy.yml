@@ -46,6 +46,5 @@ jobs:
       env:
         CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
         S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
-        S3_BUCKET_REGION: ${{ secrets.AWS_S3_BUCKET_REGION }}
       run: |
         ./scripts/deploy
