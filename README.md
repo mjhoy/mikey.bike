@@ -31,4 +31,4 @@ make preview
 
 A [Github action][GA] deploys mikey.bike when pull requests are merged.
 
-[GA]: https://github.com/mjhoy/mikey.bike/blob/master/.github/workflows/deploy.yml
+[GA]: https://github.com/mjhoy/mikey.bike/blob/main/.github/workflows/deploy.yml

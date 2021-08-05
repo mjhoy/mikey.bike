@@ -49,7 +49,7 @@ Hakyll's dependencies takes a long time -- around 40 minutes! With the cache,
 if dependencies haven't changed, each run takes only about 2 minutes.
 
 Finally, I also wrote an action to deploy the site when a PR is merged into
-the master branch. It adds [one additional step][rsync-step] to deploy the
+the main branch. It adds [one additional step][rsync-step] to deploy the
 site; after building, it just rsyncs the output to my web server. For this to
 work, I added several secret keys to a "deploy" environment I gave this
 action access to.
@@ -60,6 +60,6 @@ entry, commit the change, and deploy the updated site to my server.
 
 [repo]: https://github.com/mjhoy/mikey.bike
 [hakyll]: https://jaspervdj.be/hakyll/
-[rss]: https://github.com/mjhoy/mikey.bike/blob/master/src/Rules/Journal.hs#L40-L46
+[rss]: https://github.com/mjhoy/mikey.bike/blob/main/src/Rules/Journal.hs#L40-L46
 [test-action]: https://github.com/mjhoy/mikey.bike/blob/06ce7eef8b464822d85ed446396e591a7cff65b3/.github/workflows/test.yml
 [rsync-step]: https://github.com/mjhoy/mikey.bike/blob/06ce7eef8b464822d85ed446396e591a7cff65b3/.github/workflows/deploy.yml#L38-L46
