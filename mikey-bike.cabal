@@ -37,4 +37,3 @@ library
                   , hxt >=9.3
                   , time >=1.6
                   , time-locale-compat >=0.1
-  
