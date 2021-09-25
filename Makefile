@@ -9,10 +9,10 @@ build:
 	cabal new-build
 
 preview: site-clean
-	cabal new-run mikey-bike -- watch
+	cabal new-run site -- watch
 
 site-build: site-clean
-	cabal new-run mikey-bike -- build
+	cabal new-run site -- build
 
 site-clean:
-	cabal new-run mikey-bike -- clean
+	cabal new-run site -- clean
