@@ -1,19 +1,7 @@
 cradle:
   cabal:
-    - path: "src/Main.hs"
+    - path: "exe/"
       component: "mikey-bike:exe:site"
 
-    - path: "src/Rules/Writing.hs"
-      component: "mikey-bike:exe:site"
-
-    - path: "src/Rules/Journal.hs"
-      component: "mikey-bike:exe:site"
-
-    - path: "src/Rules/Notes.hs"
-      component: "mikey-bike:exe:site"
-
-    - path: "src/Contexts/NextPrevNav.hs"
-      component: "mikey-bike:exe:site"
-
-    - path: "src/Models/ArchiveGrouping.hs"
-      component: "mikey-bike:exe:site"
+    - path: "src/"
+      component: "mikey-bike"

@@ -34,7 +34,7 @@ jobs:
     - name: Run tests
       run: cabal new-test
     - name: Site build
-      run: cabal new-run mikey-bike -- build
+      run: cabal new-run site -- build
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:

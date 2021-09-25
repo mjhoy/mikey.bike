@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Main
-  ( main
+module Site
+  ( site
   )
 where
 
@@ -15,8 +15,8 @@ import qualified Rules.Writing                 as Writing
 import qualified Rules.Journal                 as Journal
 import qualified Rules.Notes                   as Notes
 
-main :: IO ()
-main = do
+site :: IO ()
+site = do
 
   writingSections <- Writing.buildWritingSections "writings"
 
