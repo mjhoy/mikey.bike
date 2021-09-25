@@ -34,4 +34,4 @@ jobs:
       run: cabal new-test
     - name: Run site build
       run: |
-        cabal new-run mikey-bike -- build
+        cabal new-run site -- build
