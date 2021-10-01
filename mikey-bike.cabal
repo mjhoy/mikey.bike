@@ -26,6 +26,7 @@ library
   exposed-modules:  Rules.Writing
                   , Rules.Journal
                   , Rules.Notes
+                  , FileHash
                   , Contexts.NextPrevNav
                   , Models.ArchiveGrouping
                   , Site

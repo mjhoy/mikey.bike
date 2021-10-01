@@ -1,6 +1,6 @@
 {-# LANGUAGE BangPatterns #-}
 
-module FileHash where
+module FileHash (hash) where
 
 import qualified Crypto.Hash.SHA256 as SHA256
 import qualified Data.ByteString.Lazy as BSL
