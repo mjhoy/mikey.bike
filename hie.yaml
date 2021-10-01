@@ -5,3 +5,6 @@ cradle:
 
     - path: "src/"
       component: "mikey-bike"
+
+    - path: "test/"
+      component: "test"
