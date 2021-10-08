@@ -3,11 +3,11 @@
 
 module Rules.Notes where
 
-import Hakyll
-import Data.List (sortOn)
-import Control.Monad (forM)
-import Data.Maybe (fromMaybe)
-import Data.Char (toUpper)
+import           Control.Monad                  ( forM )
+import           Data.Char                      ( toUpper )
+import           Data.List                      ( sortOn )
+import           Data.Maybe                     ( fromMaybe )
+import           Hakyll
 
 noteCtx :: Context String
 noteCtx = defaultContext
@@ -25,7 +25,7 @@ rules = do
   match "notes/**" $ do
     route $ setExtension "html"
     compile
-      $ pandocCompiler
+      $   pandocCompiler
       >>= loadAndApplyTemplate "templates/note.html" noteCtx
       >>= saveSnapshot "content"
       >>= loadAndApplyTemplate "templates/layout-notes.html" noteCtx
@@ -33,11 +33,9 @@ rules = do
   create ["notes/index.html"] $ do
     route idRoute
     compile $ do
-      notes <- alphaOrder =<< loadAllSnapshots ("notes/**" .&&. complement "notes/index.html")"content"
+      notes <- alphaOrder =<< loadAllSnapshots ("notes/**" .&&. complement "notes/index.html") "content"
       let layoutCtx = constField "title" "Notes" <> defaultContext
-      let indexCtx =
-            listField "notes" noteCtx (pure notes)
-            <> layoutCtx
+      let indexCtx  = listField "notes" noteCtx (pure notes) <> layoutCtx
       makeItem ""
-        >>= loadAndApplyTemplate "templates/notes_index.html" indexCtx
+        >>= loadAndApplyTemplate "templates/notes_index.html"  indexCtx
         >>= loadAndApplyTemplate "templates/layout-notes.html" layoutCtx

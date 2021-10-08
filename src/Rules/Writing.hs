@@ -2,19 +2,20 @@
 
 module Rules.Writing where
 
-import           Hakyll
 import           Contexts.NextPrevNav           ( nextPrevNav )
-import           System.FilePath
-import           System.Directory
-import           Control.Monad                  ( forM
+import           Control.Monad                  ( filterM
+                                                , forM
                                                 , forM_
-                                                , filterM
                                                 )
+import           Hakyll
+import           System.Directory
+import           System.FilePath
 
 data WritingSection = WritingSection
-  { writingSectionDir :: FilePath
+  { writingSectionDir   :: FilePath
   , writingSectionIndex :: Maybe FilePath
-  } deriving (Eq, Show)
+  }
+  deriving (Eq, Show)
 
 
 buildWritingSections :: FilePath -> IO [WritingSection]

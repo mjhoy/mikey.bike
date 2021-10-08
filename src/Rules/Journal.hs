@@ -3,14 +3,13 @@
 
 module Rules.Journal
   ( rules
-  )
-where
+  ) where
 
 import           Control.Category               ( (<<<) )
 import           Control.Monad                  ( filterM )
 import           Data.Maybe                     ( isNothing )
-import           Models.ArchiveGrouping
 import           Hakyll
+import           Models.ArchiveGrouping
 
 postCtx :: Context String
 postCtx = dateField "date" "%B %e, %Y" <> defaultContext
