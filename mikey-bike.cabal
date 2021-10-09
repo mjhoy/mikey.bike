@@ -33,6 +33,7 @@ library
   build-depends:    base == 4.*
                   , base16-bytestring ^>= 1.0.1.0
                   , bytestring ^>= 0.10.12.0
+                  , containers ^>= 0.6.2.1
                   , cryptohash-sha256 ^>= 0.11.102.0
                   , directory ^>= 1.3.3.0
                   , extra ^>= 1.6.15
@@ -49,6 +50,9 @@ test-suite test
   main-is:          Spec.hs
   other-modules:    FileHashSpec
   build-depends:    base == 4.*
+                  , containers ^>= 0.6.2.1
+                  , filepath >=1.4
+                  , hakyll == 4.13.*
                   , hspec ^>= 2.8.3
                   , mikey-bike
   build-tool-depends: hspec-discover:hspec-discover
