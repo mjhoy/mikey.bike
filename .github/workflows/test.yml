@@ -29,6 +29,9 @@ jobs:
     - name: Install brittany
       run: |
         cabal install brittany --installdir=$HOME/.cabal/bin
+    - name: Add cabal install dir to path
+      run: |
+        echo "$HOME/.cabal/bin" >> $GITHUB_PATH
     - name: Build
       run: |
         cabal new-configure --enable-tests
