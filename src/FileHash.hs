@@ -5,7 +5,7 @@ module FileHash
   ) where
 
 import qualified Crypto.Hash.SHA256            as SHA256
-import qualified Data.ByteString.Base16        as Base16
+import  qualified Data.ByteString.Base16        as Base16
 import qualified Data.ByteString.Char8         as BS8
 import qualified Data.ByteString.Lazy          as BSL
 
