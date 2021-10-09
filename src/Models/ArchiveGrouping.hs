@@ -3,23 +3,23 @@
 module Models.ArchiveGrouping
   ( groupPosts
   , displayArchiveGrouping
-  )
-where
+  ) where
 
 import           Data.Function                  ( (&) )
 import           Data.List                      ( foldl'
                                                 , groupBy
                                                 )
 import           Data.Maybe                     ( mapMaybe )
-import           Data.Time.Format               ( formatTime
-                                                , defaultTimeLocale
+import           Data.Time.Format               ( defaultTimeLocale
+                                                , formatTime
                                                 )
 import           Hakyll
 
 data ArchiveGrouping = ArchiveGrouping
-  { year :: String
+  { year  :: String
   , month :: String
-  } deriving (Eq, Show)
+  }
+  deriving (Eq, Show)
 
 -- Adapted from https://biosphere.cc/software-engineering/hakyll-group-posts-by-year/
 groupPosts :: (MonadMetadata m, MonadFail m) => [Item a] -> m [(ArchiveGrouping, [Item a])]

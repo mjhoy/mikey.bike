@@ -1,7 +1,7 @@
 module FileHashSpec where
 
-import FileHash (hash)
-import Test.Hspec
+import           FileHash                       ( hash )
+import           Test.Hspec
 
 spec :: Spec
 spec = do

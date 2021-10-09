@@ -2,21 +2,20 @@
 
 module Contexts.NextPrevNav
   ( nextPrevNav
-  )
-where
+  ) where
 
-import           Data.Monoid                    ( (<>) )
 import           Control.Applicative            ( empty )
-import           Hakyll
+import           Data.List                      ( sort )
+import           Data.Monoid                    ( (<>) )
 import           Data.Time.Clock                ( UTCTime )
 import           Data.Time.Locale.Compat        ( defaultTimeLocale )
+import           Hakyll
 import           System.FilePath                ( (</>)
                                                 , takeDirectory
                                                 )
-import           Text.XML.HXT.DOM.XmlNode
-import           Text.XML.HXT.DOM.TypeDefs
 import           Text.XML.HXT.DOM.ShowXml       ( xshow )
-import           Data.List                      ( sort )
+import           Text.XML.HXT.DOM.TypeDefs
+import           Text.XML.HXT.DOM.XmlNode
 
 data NavDirection = Prev | Next
 
@@ -53,13 +52,7 @@ toNavLink dir ident = do
 
 ln :: String -> String -> String -> String
 ln klass href title = xshow
-  [ mkElement
-      (mkName "a")
-      [ mkAttr (mkName "class") [mkText klass]
-      , mkAttr (mkName "href")  [mkText href]
-      ]
-      [mkText title]
-  ]
+  [mkElement (mkName "a") [mkAttr (mkName "class") [mkText klass], mkAttr (mkName "href") [mkText href]] [mkText title]]
 
 sortByDate :: [Identifier] -> Compiler [Identifier]
 sortByDate xs = do

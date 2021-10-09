@@ -2,8 +2,7 @@
 
 module Site
   ( site
-  )
-where
+  ) where
 
 import           Control.Arrow                  ( (>>>) )
 import           Hakyll
@@ -11,9 +10,9 @@ import           System.FilePath                ( replaceExtension
                                                 , splitDirectories
                                                 )
 
-import qualified Rules.Writing                 as Writing
 import qualified Rules.Journal                 as Journal
 import qualified Rules.Notes                   as Notes
+import qualified Rules.Writing                 as Writing
 
 site :: IO ()
 site = do
@@ -43,17 +42,11 @@ site = do
 
     match "index.html" $ do
       route idRoute
-      compile
-        $   getResourceBody
-        >>= loadAndApplyTemplate "templates/layout-no-footer.html"
-                                 defaultContext
+      compile $ getResourceBody >>= loadAndApplyTemplate "templates/layout-no-footer.html" defaultContext
 
     match "resume.html" $ do
       route idRoute
-      compile
-        $   getResourceBody
-        >>= loadAndApplyTemplate "templates/layout-no-footer.html"
-                                 defaultContext
+      compile $ getResourceBody >>= loadAndApplyTemplate "templates/layout-no-footer.html" defaultContext
 
     Writing.rules writingSections
 
@@ -63,13 +56,7 @@ site = do
 
     match "misc/**" $ do
       -- Drop "misc/" from the URL.
-      route
-        $   customRoute
-        $   toFilePath
-        >>> splitDirectories
-        >>> drop 1
-        >>> concat
-        >>> flip replaceExtension "html"
+      route $ customRoute $ toFilePath >>> splitDirectories >>> drop 1 >>> concat >>> flip replaceExtension "html"
       compile
         $   pandocCompiler
         >>= loadAndApplyTemplate "templates/writing.html" defaultContext
