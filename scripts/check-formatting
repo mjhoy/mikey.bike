@@ -1,0 +1,5 @@
+#!/bin/bash
+
+set -eoux pipefail
+
+find src test -name "*.hs" | xargs brittany --check-mode

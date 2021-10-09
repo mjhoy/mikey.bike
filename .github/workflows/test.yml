@@ -26,12 +26,18 @@ jobs:
       run: |
         cabal new-update
         cabal new-install --only-dependencies
+    - name: Install brittany
+      run: |
+        cabal install brittany --installdir=$HOME/.cabal/bin
     - name: Build
       run: |
         cabal new-configure --enable-tests
         cabal new-build
     - name: Run tests
       run: make test
+    - name: Check formatting
+      run: |
+        ./scripts/check-formatting
     - name: Run site build
       run: |
         cabal new-run site -- build
