@@ -28,7 +28,7 @@ jobs:
         cabal new-install --only-dependencies
     - name: Install brittany
       run: |
-        cabal install brittany --installdir=$HOME/.cabal/bin
+        cabal new-install brittany --installdir=$HOME/.cabal/bin
     - name: Add cabal install dir to path
       run: |
         echo "$HOME/.cabal/bin" >> $GITHUB_PATH
