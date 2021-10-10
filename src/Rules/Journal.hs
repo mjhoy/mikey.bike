@@ -8,6 +8,9 @@ module Rules.Journal
 import           Control.Category               ( (<<<) )
 import           Control.Monad                  ( filterM )
 import           Data.Maybe                     ( isNothing )
+import           FileHash                       ( FileHashes
+                                                , rewriteAssetUrls
+                                                )
 import           Hakyll
 import           Models.ArchiveGrouping
 
@@ -25,8 +28,8 @@ feed = FeedConfiguration { feedTitle       = "mikey.bike - journal"
                          , feedRoot        = "https://mikey.bike"
                          }
 
-rules :: Rules ()
-rules = do
+rules :: FileHashes -> Rules ()
+rules assetHashes = do
   match "journal/**" $ do
     route (setExtension "html" `composeRoutes` gsubRoute "journal/" (const "j/"))
     compile
@@ -35,6 +38,7 @@ rules = do
       >>= saveSnapshot "content"
       >>= loadAndApplyTemplate "templates/journal-page.html" postCtx
       >>= loadAndApplyTemplate "templates/layout-j.html"     defaultContext
+      >>= rewriteAssetUrls assetHashes
 
   create ["j/rss.xml"] $ do
     route idRoute
@@ -64,3 +68,4 @@ rules = do
       makeItem ""
         >>= loadAndApplyTemplate "templates/journal_index.html" indexCtx
         >>= loadAndApplyTemplate "templates/layout-j.html"      layoutCtx
+        >>= rewriteAssetUrls assetHashes
