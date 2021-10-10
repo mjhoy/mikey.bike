@@ -7,6 +7,9 @@ import           Control.Monad                  ( forM )
 import           Data.Char                      ( toUpper )
 import           Data.List                      ( sortOn )
 import           Data.Maybe                     ( fromMaybe )
+import           FileHash                       ( FileHashes
+                                                , rewriteAssetUrls
+                                                )
 import           Hakyll
 
 noteCtx :: Context String
@@ -20,8 +23,8 @@ alphaOrder items = do
   let sorted = sortOn (map toUpper . fst) itemsWithTitle
   pure (map snd sorted)
 
-rules :: Rules ()
-rules = do
+rules :: FileHashes -> Rules ()
+rules assetHashes = do
   match "notes/**" $ do
     route $ setExtension "html"
     compile
@@ -29,6 +32,7 @@ rules = do
       >>= loadAndApplyTemplate "templates/note.html" noteCtx
       >>= saveSnapshot "content"
       >>= loadAndApplyTemplate "templates/layout-notes.html" noteCtx
+      >>= rewriteAssetUrls assetHashes
 
   create ["notes/index.html"] $ do
     route idRoute
@@ -39,3 +43,4 @@ rules = do
       makeItem ""
         >>= loadAndApplyTemplate "templates/notes_index.html"  indexCtx
         >>= loadAndApplyTemplate "templates/layout-notes.html" layoutCtx
+        >>= rewriteAssetUrls assetHashes

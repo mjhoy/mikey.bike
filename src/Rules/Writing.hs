@@ -7,6 +7,9 @@ import           Control.Monad                  ( filterM
                                                 , forM
                                                 , forM_
                                                 )
+import           FileHash                       ( FileHashes
+                                                , rewriteAssetUrls
+                                                )
 import           Hakyll
 import           System.Directory
 import           System.FilePath
@@ -35,8 +38,8 @@ buildWritingSections path = do
 topicCtx :: Context String
 topicCtx = dateField "date" "%B %e, %Y" `mappend` defaultContext
 
-rules :: [WritingSection] -> Rules ()
-rules sections = do
+rules :: [WritingSection] -> FileHashes -> Rules ()
+rules sections assetHashes = do
   match "writings/**.png" $ do
     route idRoute
     compile copyFileCompiler
@@ -53,6 +56,7 @@ rules sections = do
         $   pandocCompiler
         >>= loadAndApplyTemplate "templates/writing.html" nextPrevNav
         >>= loadAndApplyTemplate "templates/layout.html"  nextPrevNav
+        >>= rewriteAssetUrls assetHashes
 
   forM_ sections $ \section -> do
     let maybeIdx = writingSectionIndex section
@@ -76,3 +80,4 @@ rules sections = do
       makeItem ""
         >>= loadAndApplyTemplate "templates/writing_index.html" indexCtx
         >>= loadAndApplyTemplate "templates/layout.html"        layoutCtx
+        >>= rewriteAssetUrls assetHashes
