@@ -1,12 +1,14 @@
 {-# LANGUAGE BangPatterns #-}
 
-module FileHash
+module AssetHashing
   ( hash
   , mkFileHashes
   , assetHashRoute
   , FileHashes
   , rewriteAssetUrls
+  , rewriteAssetUrls'
   , addHashToUrl
+  , lookupHashForUrl
   ) where
 
 import           Control.Monad.Extra            ( forM )
@@ -34,20 +36,22 @@ import           System.FilePath.Posix          ( takeBaseName
                                                 , takeExtension
                                                 )
 
+-- Inspired/taken from: https://groups.google.com/g/hakyll/c/zdkQlDsj9lQ
+
 type FileHashes = Map Identifier String
 
 hash :: FilePath -> IO String
 hash path = do
   !h <- SHA256.hashlazy <$> BSL.readFile path
-  pure $ BS8.unpack $ Base16.encode h
+  pure $! BS8.unpack $! Base16.encode h
 
 mkFileHashes :: FilePath -> IO FileHashes
 mkFileHashes dir = do
   allFiles <- getRecursiveContents (\_ -> pure False) dir
-  fmap Map.fromList $ forM allFiles $ \path0 -> do
-    let path1 = dir </> path0
-    !h <- hash path1
-    pure (fromFilePath path1, h)
+  fmap Map.fromList $ forM allFiles $ \innerPath -> do
+    let fullPath = dir </> innerPath
+    !h <- hash fullPath
+    pure (fromFilePath fullPath, h)
 
 assetHashRoute :: FileHashes -> Routes
 assetHashRoute fileHashes = customRoute $ \identifier ->
@@ -60,9 +64,15 @@ rewriteAssetUrls hashes item = do
   route <- getRoute $ itemIdentifier item
   pure $ case route of
     Nothing -> item
-    Just r  -> fmap rewrite item
- where
-  rewrite = withUrls $ \url -> maybe url (addHashToUrl url) (Map.lookup (fromFilePath (dropWhile (== '/') url)) hashes)
+    Just r  -> fmap (rewriteAssetUrls' hashes) item
+
+rewriteAssetUrls' :: FileHashes -> String -> String
+rewriteAssetUrls' hashes = withUrls rewrite
+  where rewrite url = maybe url (addHashToUrl url) (lookupHashForUrl hashes url)
+
+lookupHashForUrl :: FileHashes -> String -> Maybe String
+lookupHashForUrl hashes url = Map.lookup (fromFilePath urlWithoutRootSlash) hashes
+  where urlWithoutRootSlash = dropWhile (== '/') url
 
 addHashToUrl :: FilePath -> String -> String
 addHashToUrl path hash =

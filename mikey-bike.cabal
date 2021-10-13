@@ -26,7 +26,7 @@ library
   exposed-modules:  Rules.Writing
                   , Rules.Journal
                   , Rules.Notes
-                  , FileHash
+                  , AssetHashing
                   , Contexts.NextPrevNav
                   , Models.ArchiveGrouping
                   , Site
@@ -48,7 +48,7 @@ test-suite test
   type:             exitcode-stdio-1.0
   hs-source-dirs:   test
   main-is:          Spec.hs
-  other-modules:    FileHashSpec
+  other-modules:    AssetHashingSpec
   build-depends:    base == 4.*
                   , containers ^>= 0.6.2.1
                   , filepath >=1.4

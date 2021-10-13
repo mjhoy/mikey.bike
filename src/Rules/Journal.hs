@@ -5,12 +5,12 @@ module Rules.Journal
   ( rules
   ) where
 
+import           AssetHashing                   ( FileHashes
+                                                , rewriteAssetUrls
+                                                )
 import           Control.Category               ( (<<<) )
 import           Control.Monad                  ( filterM )
 import           Data.Maybe                     ( isNothing )
-import           FileHash                       ( FileHashes
-                                                , rewriteAssetUrls
-                                                )
 import           Hakyll
 import           Models.ArchiveGrouping
 

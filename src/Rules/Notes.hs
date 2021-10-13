@@ -3,13 +3,13 @@
 
 module Rules.Notes where
 
+import           AssetHashing                   ( FileHashes
+                                                , rewriteAssetUrls
+                                                )
 import           Control.Monad                  ( forM )
 import           Data.Char                      ( toUpper )
 import           Data.List                      ( sortOn )
 import           Data.Maybe                     ( fromMaybe )
-import           FileHash                       ( FileHashes
-                                                , rewriteAssetUrls
-                                                )
 import           Hakyll
 
 noteCtx :: Context String
