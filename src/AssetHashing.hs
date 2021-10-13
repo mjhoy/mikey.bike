@@ -6,7 +6,9 @@ module AssetHashing
   , assetHashRoute
   , FileHashes
   , rewriteAssetUrls
+  , rewriteAssetUrls'
   , addHashToUrl
+  , lookupHashForUrl
   ) where
 
 import           Control.Monad.Extra            ( forM )
@@ -46,10 +48,10 @@ hash path = do
 mkFileHashes :: FilePath -> IO FileHashes
 mkFileHashes dir = do
   allFiles <- getRecursiveContents (\_ -> pure False) dir
-  fmap Map.fromList $ forM allFiles $ \path0 -> do
-    let path1 = dir </> path0
-    !h <- hash path1
-    pure (fromFilePath path1, h)
+  fmap Map.fromList $ forM allFiles $ \innerPath -> do
+    let fullPath = dir </> innerPath
+    !h <- hash fullPath
+    pure (fromFilePath fullPath, h)
 
 assetHashRoute :: FileHashes -> Routes
 assetHashRoute fileHashes = customRoute $ \identifier ->
@@ -62,9 +64,15 @@ rewriteAssetUrls hashes item = do
   route <- getRoute $ itemIdentifier item
   pure $ case route of
     Nothing -> item
-    Just r  -> fmap rewrite item
- where
-  rewrite = withUrls $ \url -> maybe url (addHashToUrl url) (Map.lookup (fromFilePath (dropWhile (== '/') url)) hashes)
+    Just r  -> fmap (rewriteAssetUrls' hashes) item
+
+rewriteAssetUrls' :: FileHashes -> String -> String
+rewriteAssetUrls' hashes = withUrls rewrite
+  where rewrite url = maybe url (addHashToUrl url) (lookupHashForUrl hashes url)
+
+lookupHashForUrl :: FileHashes -> String -> Maybe String
+lookupHashForUrl hashes url = Map.lookup (fromFilePath urlWithoutRootSlash) hashes
+  where urlWithoutRootSlash = dropWhile (== '/') url
 
 addHashToUrl :: FilePath -> String -> String
 addHashToUrl path hash =
