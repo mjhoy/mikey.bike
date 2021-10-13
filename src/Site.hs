@@ -4,11 +4,11 @@ module Site
   ( site
   ) where
 
-import           Control.Arrow                  ( (>>>) )
-import           FileHash                       ( assetHashRoute
+import           AssetHashing                   ( assetHashRoute
                                                 , mkFileHashes
                                                 , rewriteAssetUrls
                                                 )
+import           Control.Arrow                  ( (>>>) )
 import           Hakyll
 import           System.FilePath                ( replaceExtension
                                                 , splitDirectories

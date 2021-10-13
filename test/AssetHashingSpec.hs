@@ -1,9 +1,9 @@
-module FileHashSpec where
+module AssetHashingSpec where
 
-import qualified Data.Map                      as Map
-import           FileHash                       ( hash
+import           AssetHashing                   ( hash
                                                 , mkFileHashes
                                                 )
+import qualified Data.Map                      as Map
 import           Hakyll.Core.Identifier         ( fromFilePath )
 import           System.FilePath                ( (</>) )
 import           Test.Hspec

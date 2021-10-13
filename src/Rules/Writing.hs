@@ -2,13 +2,13 @@
 
 module Rules.Writing where
 
+import           AssetHashing                   ( FileHashes
+                                                , rewriteAssetUrls
+                                                )
 import           Contexts.NextPrevNav           ( nextPrevNav )
 import           Control.Monad                  ( filterM
                                                 , forM
                                                 , forM_
-                                                )
-import           FileHash                       ( FileHashes
-                                                , rewriteAssetUrls
                                                 )
 import           Hakyll
 import           System.Directory

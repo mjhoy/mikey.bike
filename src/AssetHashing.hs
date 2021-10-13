@@ -1,6 +1,6 @@
 {-# LANGUAGE BangPatterns #-}
 
-module FileHash
+module AssetHashing
   ( hash
   , mkFileHashes
   , assetHashRoute
