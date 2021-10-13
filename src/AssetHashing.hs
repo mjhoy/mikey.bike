@@ -34,6 +34,8 @@ import           System.FilePath.Posix          ( takeBaseName
                                                 , takeExtension
                                                 )
 
+-- Inspired/taken from: https://groups.google.com/g/hakyll/c/zdkQlDsj9lQ
+
 type FileHashes = Map Identifier String
 
 hash :: FilePath -> IO String
