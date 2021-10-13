@@ -39,7 +39,7 @@ type FileHashes = Map Identifier String
 hash :: FilePath -> IO String
 hash path = do
   !h <- SHA256.hashlazy <$> BSL.readFile path
-  pure $ BS8.unpack $ Base16.encode h
+  pure $! BS8.unpack $! Base16.encode h
 
 mkFileHashes :: FilePath -> IO FileHashes
 mkFileHashes dir = do
