@@ -13,9 +13,9 @@ module AssetHashing
 
 import           Control.Monad.Extra            ( forM )
 import qualified Crypto.Hash.SHA256            as SHA256
+import qualified Data.ByteString               as BS
 import qualified Data.ByteString.Base16        as Base16
 import qualified Data.ByteString.Char8         as BS8
-import qualified Data.ByteString.Lazy          as BSL
 import qualified Data.Map                      as Map
 import           Data.Map                       ( Map )
 import           Data.Maybe                     ( fromMaybe )
@@ -42,7 +42,7 @@ type FileHashes = Map Identifier String
 
 hash :: FilePath -> IO String
 hash path = do
-  !h <- SHA256.hashlazy <$> BSL.readFile path
+  !h <- SHA256.hash <$> BS.readFile path
   pure $! BS8.unpack $! Base16.encode h
 
 mkFileHashes :: FilePath -> IO FileHashes
