@@ -68,9 +68,7 @@ rewriteAssetUrls hashes item = do
 
 rewriteAssetUrls' :: FileHashes -> String -> String
 rewriteAssetUrls' hashes = withUrls rewrite
-  where rewrite url = maybe url
-                            (addHashToUrl url)
-                            (lookupHashForUrl hashes url)
+  where rewrite url = maybe url (addHashToUrl url) (lookupHashForUrl hashes url)
 
 lookupHashForUrl :: FileHashes -> String -> Maybe String
 lookupHashForUrl hashes url = Map.lookup (fromFilePath urlWithoutRootSlash) hashes
