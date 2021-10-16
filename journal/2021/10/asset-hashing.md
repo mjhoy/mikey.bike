@@ -12,10 +12,10 @@ heathen -- `base-5.css` to `base-6.css`, etc. -- as well as updating
 their references in my templates.
 
 Ideally, this process is automated for me, and instead of incrementing
-a number, a hash of the file contents is generated every time I change
-a css or js file. Luckily, we are programmers! And we can fix this
-with the advanced technique of googling "hakyll asset hashing" and
-copying the first result.
+a number, a hash of the file contents is generated every time I make a
+css tweak. Luckily, we are programmers! And we can fix this with the
+advanced technique of googling "hakyll asset hashing" and copying from
+the first result.
 
 Here's what I ended up doing, using this [thread][thread] as a
 starting point.
@@ -39,15 +39,15 @@ hash path = do
 ```
 
 Now, I'll be honest, I don't really understand what I'm doing with
-regard to strictness here, but a) it seems reasonable to avoid
+regard to strictness here; but a) it seems reasonable to avoid
 unevaluated thunks of files floating around and b) the thread above
-sprinkled in `!` and `$!`, so I did too. Oddly, though, they used
-`ByteString.Lazy` -- I don't really know why, I switched it to the
+sprinkled in `!` and `$!` so I did too. Oddly, though, they used
+`ByteString.Lazy` -- I don't really know why and I switched it to the
 strict bytestrings. (Let me know if you know why that's dumb.)
 
-Putting laziness aside, `hash` gets a digest of a bytestring from a
-file, using the [cryptohash-256 library][sha256], and then encodes
-that in base64. Easy!
+Laziness aside, `hash` gets a digest of a bytestring from a file,
+using the [cryptohash-256 library][sha256], and then encodes that in
+base64. Easy!
 
 The next idea from that thread is to build a map, keyed from Hakyll
 `Identifier`s (which represent items to compile, such as `css` files)
@@ -144,7 +144,7 @@ So, we've moved assets to the correct paths, but how do we link to
 them? Once again the thread suggested an implementation, which feels a
 _little_ hacky to me, but I'm already in too deep and don't have any
 better ideas. Basically, we can run a url-rewriting function over the
-content of our html files, so that if it sees a link to `base.css` it
+content of our html files, so that if it finds a link to `base.css` it
 rewrites as `base-[HASH].css`. Hakyll gives us a helper functions to
 make this a lot easier, `withUrls`.
 
