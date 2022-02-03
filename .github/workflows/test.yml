@@ -12,8 +12,8 @@ jobs:
     - uses: actions/checkout@v1
     - uses: haskell/actions/setup@v1
       with:
-        ghc-version: '8.10.3'
-        cabal-version: '3.2'
+        ghc-version: '8.10.7'
+        cabal-version: '3.6.2'
     - name: Cache ~/.cabal/packages, ~/.cabal/store and dist-newstyle
       uses: actions/cache@v2
       with:
@@ -22,13 +22,14 @@ jobs:
           ~/.cabal/store
           dist-newstyle
         key: ${{ runner.os }}-${{ matrix.ghc }}
+    - name: Install brittany
+      run: |
+        cd $(mktemp -d)
+        cabal new-install brittany-0.13.1.2 --installdir=$HOME/.cabal/bin
     - name: Install dependencies
       run: |
         cabal new-update
         cabal new-install --only-dependencies
-    - name: Install brittany
-      run: |
-        cabal new-install brittany --installdir=$HOME/.cabal/bin
     - name: Add cabal install dir to path
       run: |
         echo "$HOME/.cabal/bin" >> $GITHUB_PATH
