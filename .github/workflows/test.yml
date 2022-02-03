@@ -22,13 +22,14 @@ jobs:
           ~/.cabal/store
           dist-newstyle
         key: ${{ runner.os }}-${{ matrix.ghc }}
+    - name: Install brittany
+      run: |
+        cd $(mktemp -d)
+        cabal new-install brittany-0.13.1.2 --installdir=$HOME/.cabal/bin
     - name: Install dependencies
       run: |
         cabal new-update
         cabal new-install --only-dependencies
-    - name: Install brittany
-      run: |
-        cabal new-install brittany --installdir=$HOME/.cabal/bin
     - name: Add cabal install dir to path
       run: |
         echo "$HOME/.cabal/bin" >> $GITHUB_PATH
