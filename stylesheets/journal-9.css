@@ -4,7 +4,7 @@
   margin-left: auto;
   margin-right: auto;
   padding: 0 1em;
-  font: 15px/22px Georgia;
+  font: 16px/24px Georgia;
   position: relative;
 }
 
@@ -12,24 +12,24 @@
 .content-writing ol,
 .content-writing ul
 {
-  max-width: 530px;
+  max-width: 600px;
 }
 
 header h1 {
   font-family: "Helvetica Neue", Helvetica, sans-serif;
-  font-size: 14px;
+  font-size: 25px;
   font-weight: 700;
   margin-bottom: 2em;
   margin-top: 10px;
 }
 
 pre, code {
-  font-family: Courier,monospace;
+  font-family: "SF Mono","SFMono-Regular",ui-monospace,Courier,monospace;
 }
 .content-writing p code,
 .content-writing li code,
 .content-writing pre {
-  font-size: 12px;
+  font-size: 14px;
 }
 .content-writing pre {
   margin: 15px 0;
@@ -72,7 +72,7 @@ figcaption {
   color: #555;
 }
 figure {
-  max-width: 530px;
+  max-width: 600px;
   margin: 1.5em auto 1em 0;
   text-align: center;
 }
@@ -87,34 +87,34 @@ p > img {
 
 
 .sourceCode span.kw { color: #333333; font-weight: bold; } /* Keyword */
-/* .sourceCode span.dt { color: #902000; } /\* DataType *\/ */
-/* .sourceCode span.dv { color: #40a070; } /\* DecVal *\/ */
-/* .sourceCode span.bn { color: #40a070; } /\* BaseN *\/ */
-/* .sourceCode span.fl { color: #40a070; } /\* Float *\/ */
-/* .sourceCode span.ch { color: #4070a0; } /\* Char *\/ */
+.sourceCode span.dt { color: #902000; } /* DataType */
+.sourceCode span.dv { color: #40a070; } /* DecVal */
+.sourceCode span.bn { color: #40a070; } /* BaseN */
+.sourceCode span.fl { color: #40a070; } /* Float */
+.sourceCode span.ch { color: #4070a0; } /* Char */
 .sourceCode span.st { color: #4070a0; } /* String */
 .sourceCode span.co { color: #777777; font-style: italic; } /* Comment */
-/* .sourceCode span.ot { color: #4070a0; } /\* Other *\/ */
-/* .sourceCode span.al { color: #ff0000; font-weight: bold; } /\* Alert *\/ */
-/* .sourceCode span.fu { color: #06287e; } /\* Function *\/ */
-/* .sourceCode span.er { color: #ff0000; font-weight: bold; } /\* Error *\/ */
-/* .sourceCode span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /\* Warning *\/ */
-/* .sourceCode span.cn { color: #880000; } /\* Constant *\/ */
-/* .sourceCode span.sc { color: #4070a0; } /\* SpecialChar *\/ */
-/* .sourceCode span.vs { color: #4070a0; } /\* VerbatimString *\/ */
-/* .sourceCode span.ss { color: #bb6688; } /\* SpecialString *\/ */
-/* .sourceCode span.im { } /\* Import *\/ */
-/* .sourceCode span.va { color: #19177c; } /\* Variable *\/ */
-/* .sourceCode span.cf { color: #666666; font-weight: bold; } /\* ControlFlow *\/ */
-/* .sourceCode span.op { color: #666666; } /\* Operator *\/ */
-/* .sourceCode span.bu { } /\* BuiltIn *\/ */
-/* .sourceCode span.ex { } /\* Extension *\/ */
-/* .sourceCode span.pp { color: #bc7a00; } /\* Preprocessor *\/ */
-/* .sourceCode span.at { color: #7d9029; } /\* Attribute *\/ */
-/* .sourceCode span.do { color: #ba2121; font-style: italic; } /\* Documentation *\/ */
-/* .sourceCode span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /\* Annotation *\/ */
-/* .sourceCode span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /\* CommentVar *\/ */
-/* .sourceCode span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /\* Information *\/ */
+.sourceCode span.ot { color: #4070a0; } /* Other */
+.sourceCode span.al { color: #ff0000; font-weight: bold; } /* Alert */
+.sourceCode span.fu { color: #06287e; } /* Function */
+.sourceCode span.er { color: #ff0000; font-weight: bold; } /* Error */
+.sourceCode span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+.sourceCode span.cn { color: #880000; } /* Constant */
+.sourceCode span.sc { color: #4070a0; } /* SpecialChar */
+.sourceCode span.vs { color: #4070a0; } /* VerbatimString */
+.sourceCode span.ss { color: #bb6688; } /* SpecialString */
+.sourceCode span.im { } /* Import */
+.sourceCode span.va { color: #19177c; } /* Variable */
+.sourceCode span.cf { color: #666666; font-weight: bold; } /* ControlFlow */
+.sourceCode span.op { color: #666666; } /* Operator */
+.sourceCode span.bu { } /* BuiltIn */
+.sourceCode span.ex { } /* Extension */
+.sourceCode span.pp { color: #bc7a00; } /* Preprocessor */
+.sourceCode span.at { color: #7d9029; } /* Attribute */
+.sourceCode span.do { color: #ba2121; font-style: italic; } /* Documentation */
+.sourceCode span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+.sourceCode span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+.sourceCode span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 
 footer#main {
   margin: 0 auto;
@@ -125,6 +125,26 @@ footer#main {
   font-style: italic;
   border-top: 0.5px solid #bbb;
 }
+
+header#main-header {
+  margin: 0 auto;
+  padding: 0.5em 1em 1em 1em;
+  max-width: 800px;
+  font-size: 15px;
+  font-family: ui-monospace, monospace;
+  font-weight: 900;
+  border-bottom: 5px solid #222;
+  text-align: center;
+}
+
+header#main-header a[href] {
+  color: #222;
+  border-bottom: none;
+}
+header#main-header a[href]:hover {
+  color: black;
+}
+
 a[href] {
   color:black;
   text-decoration:none;
@@ -146,7 +166,7 @@ footer.post-footer {
 
 div.aside {
   position: absolute;
-  left: 575px;
+  left: 665px;
   width: 230px;
   font-family: "Helvetica Neue", Helvetica, sans-serif;
   font-size: 11px;
@@ -166,9 +186,7 @@ div.aside {
   max-width: 800px;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 60px;
-  border-top: 1px solid #eee;
-  padding-top: 15px;
+  padding: 15px 1em 0 1em;
 }
 .journal-entry:first-child .post-header {
   border: none;
@@ -178,26 +196,28 @@ div.aside {
   margin-top: 3em;
   margin-bottom: 0;
   font-family: helvetica;
-  font-weight: 300;
-  font-size: 0.8em;
+  font-weight: 500;
+  font-size: 15px;
 }
 .journal-entry .content-writing h1 {
-  margin-top: 35px;
-  font-size: 16px;
+  margin-top: 48px;
+  font-size: 18px;
   font-family: "Helvetica Neue", Helvetica, sans-serif;
-  font-weight: 400;
+  font-weight: 600;
+  color: #181818;
 }
 
 .journal-entry .content-writing h2 {
-  font-size: 14px;
+  font-size: 17px;
   font-family: "Helvetica Neue", Helvetica, sans-serif;
-  font-weight: 600;
+  font-weight: 400;
+  margin-top: 35px;
+  font-style: italic;
 }
 pre.sourceCode {
-  background-color: rgb(254, 254, 242);
-  border: 1px solid #bbb;
-  width: 500px;
+  background-color: rgb(255, 255, 236);
   padding: 10px;
+  width: 610px;
 }
 blockquote {
   font-size: 13px;
