@@ -1,0 +1,12 @@
+<section id="journal-home">
+  <section class="journal-archive">
+    $for(yearmonths)$
+    <h3>$yearmonth$</h3>
+    $for(archivedposts)$
+    <div class="journal-archive-title">
+      <a href="$url$">$title$</a>
+    </div>
+    $endfor$
+    $endfor$
+  </section>
+</section>

@@ -28,6 +28,17 @@ feed = FeedConfiguration { feedTitle       = "mikey.bike - journal"
                          , feedRoot        = "https://mikey.bike"
                          }
 
+loadPosts :: Compiler [Item String]
+loadPosts = recentFirst =<< nonDrafts =<< loadAllSnapshots "journal/**" "content"
+
+postIndexCtx :: [Item String] -> Compiler (Context String)
+postIndexCtx posts = do
+  postsArchive <- groupPosts posts
+  pure $ listField
+    "yearmonths"
+    (field "yearmonth" (return . fst . itemBody) <> listFieldWith "archivedposts" postCtx (return . snd . itemBody))
+    (traverse (\(g, groupedPosts) -> makeItem (displayArchiveGrouping g, groupedPosts)) postsArchive)
+
 rules :: FileHashes -> Rules ()
 rules assetHashes = do
   match "journal/**" $ do
@@ -48,24 +59,28 @@ rules assetHashes = do
       posts <- firstTen =<< nonDrafts =<< loadAllSnapshots "journal/**" "content"
       renderRss feed feedCtx posts
 
+  create ["j/archive.html"] $ do
+    route idRoute
+    compile $ do
+      posts    <- loadPosts
+      indexCtx <- postIndexCtx posts
+
+      let layoutCtx = constField "title" "Journal" <> defaultContext
+      makeItem ""
+        >>= loadAndApplyTemplate "templates/journal_archive.html" indexCtx
+        >>= loadAndApplyTemplate "templates/layout-j.html"        layoutCtx
+        >>= rewriteAssetUrls assetHashes
+
   create ["j/index.html"] $ do
     route idRoute
     compile $ do
-      posts <- recentFirst =<< nonDrafts =<< loadAllSnapshots "journal/**" "content"
+      posts <- loadPosts
       let detailPosts = take 1 posts
-      postsArchive <- groupPosts (drop 1 posts)
+      indexCtx <- postIndexCtx (drop 1 posts)
 
       let layoutCtx = constField "title" "Journal" <> defaultContext
-      let indexCtx =
-            listField "posts" postCtx (return detailPosts)
-              <> listField
-                   "yearmonths"
-                   (  field "yearmonth" (return . fst . itemBody)
-                   <> listFieldWith "archivedposts" postCtx (return . snd . itemBody)
-                   )
-                   (traverse (\(g, groupedPosts) -> makeItem (displayArchiveGrouping g, groupedPosts)) postsArchive)
-              <> layoutCtx
+      let homeCtx   = listField "posts" postCtx (return detailPosts) <> indexCtx
       makeItem ""
-        >>= loadAndApplyTemplate "templates/journal_index.html" indexCtx
-        >>= loadAndApplyTemplate "templates/layout-j.html"      layoutCtx
+        >>= loadAndApplyTemplate "templates/journal_home.html" homeCtx
+        >>= loadAndApplyTemplate "templates/layout-j.html"     layoutCtx
         >>= rewriteAssetUrls assetHashes
