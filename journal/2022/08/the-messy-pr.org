@@ -1,0 +1,61 @@
+---
+title: The messy pull request
+date: 2022-08-16T07:00:00-0400
+---
+
+In an ideal world, we'd all push up our branches for review composed
+of small, atomic commits, each producing a coherent build and passing
+all tests, each commit reviewed separately and signed-off on or
+rewritten to incorporate feedback, and merged cleanly back into the
+base branch.
+
+Such a merge might be followed by a slight smile, a sitting back in
+one's chair and a little sigh of accomplishment. Ahhh.
+
+This ideal world may or may not exist with some open source
+projects. For a product team, there are other considerations: mostly,
+everyone's time. The Pull Request -- at least as it exists on Github
+-- is a kind of ground zero, where your innocent change is pushed into
+a world of hostile linters, integrated tests, code reviewers, merge
+conflicts, code coverage, ticketing systems, review apps, and so
+on. It will be ripped to shreds, and you'll hardly have gotten
+started.
+
+I think it's good to keep it messy. Don't hide the battle scars. As
+the feedback comes in, push up new commits. Github has a handy way of
+displaying comments and commits in chronological order -- but this
+doesn't work if you rewrite the original commits.
+
+Treat the history of a branch up for review as immutable. When the
+base branch is updated, merge it back in. Resolving conflicts will
+just be part of the story of this PR. Reviewers coming back to see
+what's been changed can clearly see the new commits at the bottom of
+the page. Anyone who has branched off the PR is going to have a much
+easier time keeping it up-to-date.
+
+Don't rebase. A rebase wipes out that chronological
+ordering. Reviewers can't follow how feedback was incorporated, or how
+conflicts were resolved. Besides, it requires rewriting every commit
+on your branch; there are now up to N conflicts to resolve instead
+of 1.
+
+If it makes sense, I like to commit each change associated with a
+comment separately, then reply to that comment with the SHA of the
+commit. As long as the commit has been pushed, Github will turn SHAs
+into links. And because I'm not rebasing, those links will continue to
+work.
+
+A contentious PR will be littered with commits by the end. That's
+good.
+
+The point of allowing all this messiness is to squash everything at
+the end, of course. The messy PR is building toward one commit, not a
+set of them, with a nice title and description. Anyone curious how the
+sausage was made can go back to the PR.
+
+The truth is I'm not above a good =git push --force= to fix a commit
+here or there. The one real exception I've found, though, is when a PR
+is based off the branch from another PR. When the base PR is merged
+and squashed, now you have the original set of commits hanging around
+in the PR opened against it. In this case, I usually do rebase and
+drop those, because I think it improves clarity.
