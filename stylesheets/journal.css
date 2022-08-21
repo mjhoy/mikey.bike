@@ -155,6 +155,14 @@ a[href]:hover {
   border-bottom: 1px solid black;
 }
 
+a.journal-permalink {
+  border-bottom: none;
+  color: #575757;
+  padding-right: 2px;
+  position: relative;
+  bottom: 1px;
+}
+
 footer.post-footer {
   font-family: "Helvetica Neue", Helvetica, sans-serif;
   font-size: 12px;

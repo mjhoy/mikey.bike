@@ -45,10 +45,10 @@ rules assetHashes = do
     route (setExtension "html" `composeRoutes` gsubRoute "journal/" (const "j/"))
     compile
       $   pandocCompiler
-      >>= loadAndApplyTemplate "templates/journal.html" postCtx
+      >>= loadAndApplyTemplate "templates/journal/content-body.html" postCtx
       >>= saveSnapshot "content"
-      >>= loadAndApplyTemplate "templates/journal-page.html" postCtx
-      >>= loadAndApplyTemplate "templates/layout-j.html"     defaultContext
+      >>= loadAndApplyTemplate "templates/journal/page.html"   postCtx
+      >>= loadAndApplyTemplate "templates/journal/layout.html" defaultContext
       >>= rewriteAssetUrls assetHashes
 
   create ["j/rss.xml"] $ do
@@ -67,8 +67,8 @@ rules assetHashes = do
 
       let layoutCtx = constField "title" "Journal" <> defaultContext
       makeItem ""
-        >>= loadAndApplyTemplate "templates/journal_archive.html" indexCtx
-        >>= loadAndApplyTemplate "templates/layout-j.html"        layoutCtx
+        >>= loadAndApplyTemplate "templates/journal/archive.html" indexCtx
+        >>= loadAndApplyTemplate "templates/journal/layout.html"  layoutCtx
         >>= rewriteAssetUrls assetHashes
 
   create ["j/index.html"] $ do
@@ -81,6 +81,6 @@ rules assetHashes = do
       let layoutCtx = constField "title" "Journal" <> defaultContext
       let homeCtx   = listField "posts" postCtx (return detailPosts) <> indexCtx
       makeItem ""
-        >>= loadAndApplyTemplate "templates/journal_home.html" homeCtx
-        >>= loadAndApplyTemplate "templates/layout-j.html"     layoutCtx
+        >>= loadAndApplyTemplate "templates/journal/home.html"   homeCtx
+        >>= loadAndApplyTemplate "templates/journal/layout.html" layoutCtx
         >>= rewriteAssetUrls assetHashes
