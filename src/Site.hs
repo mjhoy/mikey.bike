@@ -80,4 +80,4 @@ site = do
         >>= loadAndApplyTemplate "templates/layout.html"  defaultContext
         >>= rewriteAssetUrls assetHashes
 
-    match "templates/*" $ compile templateBodyCompiler
+    match "templates/**" $ compile templateBodyCompiler
