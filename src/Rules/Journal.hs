@@ -2,7 +2,8 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
 module Rules.Journal
-  ( rules
+  ( rules,
+    indexRoute
   ) where
 
 import           AssetHashing                   ( FileHashes
@@ -38,6 +39,21 @@ postIndexCtx posts = do
     "yearmonths"
     (field "yearmonth" (return . fst . itemBody) <> listFieldWith "archivedposts" postCtx (return . snd . itemBody))
     (traverse (\(g, groupedPosts) -> makeItem (displayArchiveGrouping g, groupedPosts)) postsArchive)
+
+indexRoute :: FileHashes -> Rules ()
+indexRoute assetHashes = do
+  route idRoute
+  compile $ do
+    posts <- loadPosts
+    let detailPosts = take 1 posts
+    indexCtx <- postIndexCtx (drop 1 posts)
+
+    let layoutCtx = constField "title" "Journal" <> defaultContext
+    let homeCtx   = listField "posts" postCtx (return detailPosts) <> indexCtx
+    makeItem ""
+      >>= loadAndApplyTemplate "templates/journal/home.html"   homeCtx
+      >>= loadAndApplyTemplate "templates/journal/layout.html" layoutCtx
+      >>= rewriteAssetUrls assetHashes
 
 rules :: FileHashes -> Rules ()
 rules assetHashes = do
