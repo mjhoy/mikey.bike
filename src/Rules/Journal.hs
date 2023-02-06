@@ -2,8 +2,8 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
 module Rules.Journal
-  ( rules,
-    indexRoute
+  ( rules
+  , indexRoute
   ) where
 
 import           AssetHashing                   ( FileHashes
