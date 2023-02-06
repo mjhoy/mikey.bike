@@ -51,12 +51,7 @@ site = do
       route $ assetHashRoute cssHashes
       compile copyFileCompiler
 
-    match "index.html" $ do
-      route idRoute
-      compile
-        $   getResourceBody
-        >>= loadAndApplyTemplate "templates/layout-no-footer.html" defaultContext
-        >>= rewriteAssetUrls assetHashes
+    match "index.html" $ Journal.indexRoute assetHashes
 
     match "resume.html" $ do
       route idRoute
