@@ -77,12 +77,12 @@ stuck. I've used it to have a relatively long conversation about birds
 and migration -- I was trying to come up with a good name for the little
 migrator tool I want to write -- and it worked quite well.
 
-Both of these tools can confidently give you the wrong answer, and I
-think learning to be skeptical and review exactly what's written is
-going to be an important skill in using them effectively. At first,
-`copilot` wasn't saving me any time, because I'd trust it too much and
-then have to go hunt down all the bugs after I noticed it broke
-everything.
+Both of these tools (like the beta sprayer) can confidently give you
+the wrong answer, and I think learning to be skeptical and review
+exactly what's written is going to be an important skill in using them
+effectively. At first, `copilot` wasn't saving me any time, because
+I'd trust it too much and then have to go hunt down all the bugs after
+I noticed it broke everything.
 
 On a happy note, I think the whole model of `emacs` -- everything in a
 buffer, everything as text -- will do relatively well in this new
