@@ -10,7 +10,7 @@ import           AssetHashing                   ( FileHashes
                                                 , rewriteAssetUrls
                                                 )
 import           Control.Category               ( (<<<) )
-import           Control.Monad                  ( filterM )
+import           Control.Monad                  ( filterM, forM )
 import           Data.Maybe                     ( isNothing )
 import           Hakyll
 import           Models.ArchiveGrouping
@@ -72,7 +72,8 @@ rules assetHashes = do
     compile $ do
       let feedCtx  = postCtx `mappend` bodyField "description"
       let firstTen = fmap (take 10) <<< recentFirst
-      posts <- firstTen =<< nonDrafts =<< loadAllSnapshots "journal/**" "content"
+      let process posts = forM posts $ \post -> rewriteAssetUrls assetHashes post
+      posts <- firstTen =<< nonDrafts =<< process =<< loadAllSnapshots "journal/**" "content"
       renderRss feed feedCtx posts
 
   create ["j/archive.html"] $ do
