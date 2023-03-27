@@ -10,7 +10,9 @@ import           AssetHashing                   ( FileHashes
                                                 , rewriteAssetUrls
                                                 )
 import           Control.Category               ( (<<<) )
-import           Control.Monad                  ( filterM, forM )
+import           Control.Monad                  ( filterM
+                                                , forM
+                                                )
 import           Data.Maybe                     ( isNothing )
 import           Hakyll
 import           Models.ArchiveGrouping
