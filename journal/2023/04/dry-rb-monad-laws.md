@@ -27,7 +27,7 @@ end
 
 def create_post(user, title)
   post = user.posts.build(title:)
-  if post.save?
+  if post.save
     Success(post)
   else
     Failure(post.errors)
@@ -140,7 +140,7 @@ b <- run_b a
 pure b
 ```
 
-Of course, you think. _It's a bind call, [I know this][i-know-this]_.
+Of course, you think. _It's a call to bind, [I know this][i-know-this]_.
 
 An indelible feature of monads in Haskell are that [monads have
 laws][monad-laws]. The identity law tells you that given some monad
@@ -171,7 +171,7 @@ This doesn't actually work, and you just broke transactional
 safety. If `create_post_for_user` fails, the transaction _still
 commits_ and the user is marked as having posted.
 
-Why is it? The problem is that `yield` was doing work here in
+Why is this? The problem is that `yield` was doing work here in
 producing side effects that caused the rollback. Pure `Failure`
 objects don't cause exceptions, and the transaction happily commits.
 
