@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - uses: haskell/actions/setup@v1
+    - uses: haskell/actions/setup@v2
       with:
         ghc-version: '9.2.7'
         cabal-version: '3.6.2'
@@ -23,6 +23,9 @@ jobs:
           dist-newstyle
         key: ${{ runner.os }}-${{ matrix.ghc }}
     - uses: haskell-actions/run-fourmolu@v6
+      with:
+        pattern: |
+          src/**/*.hs
     - name: Install dependencies
       run: |
         cabal new-update
