@@ -3,14 +3,15 @@
 
 module Rules.Notes where
 
-import           AssetHashing                   ( FileHashes
-                                                , rewriteAssetUrls
-                                                )
-import           Control.Monad                  ( forM )
-import           Data.Char                      ( toUpper )
-import           Data.List                      ( sortOn )
-import           Data.Maybe                     ( fromMaybe )
-import           Hakyll
+import AssetHashing
+  ( FileHashes
+  , rewriteAssetUrls
+  )
+import Control.Monad (forM)
+import Data.Char (toUpper)
+import Data.List (sortOn)
+import Data.Maybe (fromMaybe)
+import Hakyll
 
 noteCtx :: Context String
 noteCtx = defaultContext
@@ -27,20 +28,20 @@ rules :: FileHashes -> Rules ()
 rules assetHashes = do
   match "notes/**" $ do
     route $ setExtension "html"
-    compile
-      $   pandocCompiler
-      >>= loadAndApplyTemplate "templates/note.html" noteCtx
-      >>= saveSnapshot "content"
-      >>= loadAndApplyTemplate "templates/layout-notes.html" noteCtx
-      >>= rewriteAssetUrls assetHashes
+    compile $
+      pandocCompiler
+        >>= loadAndApplyTemplate "templates/note.html" noteCtx
+        >>= saveSnapshot "content"
+        >>= loadAndApplyTemplate "templates/layout-notes.html" noteCtx
+        >>= rewriteAssetUrls assetHashes
 
   create ["notes/index.html"] $ do
     route idRoute
     compile $ do
       notes <- alphaOrder =<< loadAllSnapshots ("notes/**" .&&. complement "notes/index.html") "content"
       let layoutCtx = constField "title" "Notes" <> defaultContext
-      let indexCtx  = listField "notes" noteCtx (pure notes) <> layoutCtx
+      let indexCtx = listField "notes" noteCtx (pure notes) <> layoutCtx
       makeItem ""
-        >>= loadAndApplyTemplate "templates/notes_index.html"  indexCtx
+        >>= loadAndApplyTemplate "templates/notes_index.html" indexCtx
         >>= loadAndApplyTemplate "templates/layout-notes.html" layoutCtx
         >>= rewriteAssetUrls assetHashes
