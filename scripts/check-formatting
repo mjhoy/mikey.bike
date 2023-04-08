@@ -2,4 +2,4 @@
 
 set -eoux pipefail
 
-find src test -name "*.hs" | xargs brittany --check-mode
+fourmolu --mode check src

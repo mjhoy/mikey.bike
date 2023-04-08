@@ -11,30 +11,32 @@ module AssetHashing
   , lookupHashForUrl
   ) where
 
-import           Control.Monad.Extra            ( forM )
-import qualified Crypto.Hash.SHA256            as SHA256
-import qualified Data.ByteString               as BS
-import qualified Data.ByteString.Base16        as Base16
-import qualified Data.ByteString.Char8         as BS8
-import qualified Data.Map                      as Map
-import           Data.Map                       ( Map )
-import           Data.Maybe                     ( fromMaybe )
-import           Hakyll                         ( Compiler
-                                                , Identifier
-                                                , Item(itemIdentifier)
-                                                , Routes
-                                                , customRoute
-                                                , fromFilePath
-                                                , getRecursiveContents
-                                                , getRoute
-                                                , toFilePath
-                                                , withUrls
-                                                )
-import           System.FilePath                ( (</>) )
-import           System.FilePath.Posix          ( takeBaseName
-                                                , takeDirectory
-                                                , takeExtension
-                                                )
+import Control.Monad.Extra (forM)
+import qualified Crypto.Hash.SHA256 as SHA256
+import qualified Data.ByteString as BS
+import qualified Data.ByteString.Base16 as Base16
+import qualified Data.ByteString.Char8 as BS8
+import Data.Map (Map)
+import qualified Data.Map as Map
+import Data.Maybe (fromMaybe)
+import Hakyll
+  ( Compiler
+  , Identifier
+  , Item (itemIdentifier)
+  , Routes
+  , customRoute
+  , fromFilePath
+  , getRecursiveContents
+  , getRoute
+  , toFilePath
+  , withUrls
+  )
+import System.FilePath ((</>))
+import System.FilePath.Posix
+  ( takeBaseName
+  , takeDirectory
+  , takeExtension
+  )
 
 -- Inspired/taken from: https://groups.google.com/g/hakyll/c/zdkQlDsj9lQ
 
@@ -56,27 +58,29 @@ mkFileHashes dir = do
 assetHashRoute :: FileHashes -> Routes
 assetHashRoute fileHashes = customRoute $ \identifier ->
   let maybeHash = Map.lookup identifier fileHashes
-      path      = toFilePath identifier
-  in  maybe path (addHashToUrl path) maybeHash
+      path = toFilePath identifier
+   in maybe path (addHashToUrl path) maybeHash
 
 rewriteAssetUrls :: FileHashes -> Item String -> Compiler (Item String)
 rewriteAssetUrls hashes item = do
   route <- getRoute $ itemIdentifier item
   pure $ case route of
     Nothing -> item
-    Just r  -> fmap (rewriteAssetUrls' hashes) item
+    Just r -> fmap (rewriteAssetUrls' hashes) item
 
 rewriteAssetUrls' :: FileHashes -> String -> String
 rewriteAssetUrls' hashes = withUrls rewrite
-  where rewrite url = maybe url (addHashToUrl url) (lookupHashForUrl hashes url)
+ where
+  rewrite url = maybe url (addHashToUrl url) (lookupHashForUrl hashes url)
 
 lookupHashForUrl :: FileHashes -> String -> Maybe String
 lookupHashForUrl hashes url = Map.lookup (fromFilePath urlWithoutRootSlash) hashes
-  where urlWithoutRootSlash = dropWhile (== '/') url
+ where
+  urlWithoutRootSlash = dropWhile (== '/') url
 
 addHashToUrl :: FilePath -> String -> String
 addHashToUrl path hash =
-  let baseName  = takeBaseName path
+  let baseName = takeBaseName path
       extension = takeExtension path
-      dir       = takeDirectory path
-  in  dir </> baseName <> "-" <> hash <> extension
+      dir = takeDirectory path
+   in dir </> baseName <> "-" <> hash <> extension

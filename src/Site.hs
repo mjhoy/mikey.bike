@@ -4,30 +4,31 @@ module Site
   ( site
   ) where
 
-import           AssetHashing                   ( assetHashRoute
-                                                , mkFileHashes
-                                                , rewriteAssetUrls
-                                                )
-import           Control.Arrow                  ( (>>>) )
-import           Hakyll
-import           System.FilePath                ( replaceExtension
-                                                , splitDirectories
-                                                )
+import AssetHashing
+  ( assetHashRoute
+  , mkFileHashes
+  , rewriteAssetUrls
+  )
+import Control.Arrow ((>>>))
+import Hakyll
+import System.FilePath
+  ( replaceExtension
+  , splitDirectories
+  )
 
-import           Debug.Trace                    ( traceShowM )
-import qualified Rules.Journal                 as Journal
-import qualified Rules.Notes                   as Notes
-import qualified Rules.Writing                 as Writing
+import Debug.Trace (traceShowM)
+import qualified Rules.Journal as Journal
+import qualified Rules.Notes as Notes
+import qualified Rules.Writing as Writing
 
 site :: IO ()
 site = do
-
   writingSections <- Writing.buildWritingSections "writings"
 
   hakyll $ do
     imageHashes <- preprocess (mkFileHashes "images")
-    cssHashes   <- preprocess (mkFileHashes "stylesheets")
-    jsHashes    <- preprocess (mkFileHashes "js")
+    cssHashes <- preprocess (mkFileHashes "stylesheets")
+    jsHashes <- preprocess (mkFileHashes "js")
 
     let assetHashes = imageHashes <> cssHashes <> jsHashes
 
@@ -55,10 +56,10 @@ site = do
 
     match "resume.html" $ do
       route idRoute
-      compile
-        $   getResourceBody
-        >>= loadAndApplyTemplate "templates/layout-no-footer.html" defaultContext
-        >>= rewriteAssetUrls assetHashes
+      compile $
+        getResourceBody
+          >>= loadAndApplyTemplate "templates/layout-no-footer.html" defaultContext
+          >>= rewriteAssetUrls assetHashes
 
     Writing.rules writingSections assetHashes
 
@@ -69,10 +70,10 @@ site = do
     match "misc/**" $ do
       -- Drop "misc/" from the URL.
       route $ customRoute $ toFilePath >>> splitDirectories >>> drop 1 >>> concat >>> flip replaceExtension "html"
-      compile
-        $   pandocCompiler
-        >>= loadAndApplyTemplate "templates/writing.html" defaultContext
-        >>= loadAndApplyTemplate "templates/layout.html"  defaultContext
-        >>= rewriteAssetUrls assetHashes
+      compile $
+        pandocCompiler
+          >>= loadAndApplyTemplate "templates/writing.html" defaultContext
+          >>= loadAndApplyTemplate "templates/layout.html" defaultContext
+          >>= rewriteAssetUrls assetHashes
 
     match "templates/**" $ compile templateBodyCompiler

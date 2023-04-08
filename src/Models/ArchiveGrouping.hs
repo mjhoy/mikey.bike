@@ -5,18 +5,20 @@ module Models.ArchiveGrouping
   , displayArchiveGrouping
   ) where
 
-import           Data.Function                  ( (&) )
-import           Data.List                      ( foldl'
-                                                , groupBy
-                                                )
-import           Data.Maybe                     ( mapMaybe )
-import           Data.Time.Format               ( defaultTimeLocale
-                                                , formatTime
-                                                )
-import           Hakyll
+import Data.Function ((&))
+import Data.List
+  ( foldl'
+  , groupBy
+  )
+import Data.Maybe (mapMaybe)
+import Data.Time.Format
+  ( defaultTimeLocale
+  , formatTime
+  )
+import Hakyll
 
 data ArchiveGrouping = ArchiveGrouping
-  { year  :: String
+  { year :: String
   , month :: String
   }
   deriving (Eq, Show)
@@ -30,7 +32,7 @@ groupPosts posts = do
   merge :: [(ArchiveGrouping, Item a)] -> Maybe (ArchiveGrouping, [Item a])
   merge = foldl' fn Nothing
    where
-    fn Nothing         (g, i) = Just (g, [i])
+    fn Nothing (g, i) = Just (g, [i])
     fn (Just (g, acc)) (_, i) = Just (g, acc ++ [i])
 
   group :: [(ArchiveGrouping, Item a)] -> [[(ArchiveGrouping, Item a)]]
@@ -45,9 +47,9 @@ postToArchiveGrouping :: (MonadMetadata m, MonadFail m) => Item a -> m ArchiveGr
 postToArchiveGrouping i = do
   let identifier = itemIdentifier i
   utcTime <- getItemUTC defaultTimeLocale identifier
-  let year  = formatTime defaultTimeLocale "%Y" utcTime
+  let year = formatTime defaultTimeLocale "%Y" utcTime
   let month = formatTime defaultTimeLocale "%B" utcTime
-  pure $ ArchiveGrouping { year, month }
+  pure $ ArchiveGrouping{year, month}
 
 displayArchiveGrouping :: ArchiveGrouping -> String
 displayArchiveGrouping (ArchiveGrouping year month) = month ++ " " ++ year

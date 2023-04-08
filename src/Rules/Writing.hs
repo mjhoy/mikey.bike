@@ -2,38 +2,37 @@
 
 module Rules.Writing where
 
-import           AssetHashing                   ( FileHashes
-                                                , rewriteAssetUrls
-                                                )
-import           Contexts.NextPrevNav           ( nextPrevNav )
-import           Control.Monad                  ( filterM
-                                                , forM
-                                                , forM_
-                                                )
-import           Hakyll
-import           System.Directory
-import           System.FilePath
+import AssetHashing
+  ( FileHashes
+  , rewriteAssetUrls
+  )
+import Contexts.NextPrevNav (nextPrevNav)
+import Control.Monad
+  ( filterM
+  , forM
+  , forM_
+  )
+import Hakyll
+import System.Directory
+import System.FilePath
 
 data WritingSection = WritingSection
-  { writingSectionDir   :: FilePath
+  { writingSectionDir :: FilePath
   , writingSectionIndex :: Maybe FilePath
   }
   deriving (Eq, Show)
-
 
 buildWritingSections :: FilePath -> IO [WritingSection]
 buildWritingSections path = do
   contents <- listDirectory path
   sections <- filterM (doesDirectoryExist . (path </>)) contents
   build sections
-
  where
-
   build sections = forM sections $ \sectionName -> do
     let indexPath = path </> sectionName <> ".md"
     hasIndex <- doesFileExist indexPath
     let maybeIndex = if hasIndex then Just indexPath else Nothing
-    pure $ WritingSection { writingSectionDir = path </> sectionName, writingSectionIndex = maybeIndex }
+    pure $ WritingSection{writingSectionDir = path </> sectionName, writingSectionIndex = maybeIndex}
 
 topicCtx :: Context String
 topicCtx = dateField "date" "%B %e, %Y" `mappend` defaultContext
@@ -52,15 +51,15 @@ rules sections assetHashes = do
     let glob = dir </> "**"
     match (fromGlob glob) $ do
       route $ setExtension "html"
-      compile
-        $   pandocCompiler
-        >>= loadAndApplyTemplate "templates/writing.html" nextPrevNav
-        >>= loadAndApplyTemplate "templates/layout.html"  nextPrevNav
-        >>= rewriteAssetUrls assetHashes
+      compile $
+        pandocCompiler
+          >>= loadAndApplyTemplate "templates/writing.html" nextPrevNav
+          >>= loadAndApplyTemplate "templates/layout.html" nextPrevNav
+          >>= rewriteAssetUrls assetHashes
 
   forM_ sections $ \section -> do
     let maybeIdx = writingSectionIndex section
-    let dir      = writingSectionDir section
+    let dir = writingSectionDir section
     case maybeIdx of
       Just idx -> match (fromGlob idx) $ do
         route $ setExtension "html"
@@ -76,8 +75,8 @@ rules sections assetHashes = do
     compile $ do
       writingIndices <- recentFirst =<< loadAll "writings/*.md"
       let layoutCtx = constField "title" "Writings | mikey.bike" <> defaultContext
-      let indexCtx  = listField "topics" topicCtx (return writingIndices) <> layoutCtx
+      let indexCtx = listField "topics" topicCtx (return writingIndices) <> layoutCtx
       makeItem ""
         >>= loadAndApplyTemplate "templates/writing_index.html" indexCtx
-        >>= loadAndApplyTemplate "templates/layout.html"        layoutCtx
+        >>= loadAndApplyTemplate "templates/layout.html" layoutCtx
         >>= rewriteAssetUrls assetHashes
