@@ -13,7 +13,7 @@ import Control.Arrow ((>>>))
 import Hakyll
 import System.FilePath
   ( replaceExtension
-  ,  splitDirectories
+  , splitDirectories
   )
 
 import Debug.Trace (traceShowM)
