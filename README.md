@@ -1,5 +1,7 @@
 # mikey.bike
 
+Static site generator for https://mikey.bike based on [Hakyll][hakyll].
+
 ## building
 
 mikey.bike requires ghc & cabal to build. I suggest using `ghcup` to
@@ -31,4 +33,5 @@ make preview
 
 A [Github action][GA] deploys mikey.bike when pull requests are merged.
 
+[hakyll]: https://github.com/jaspervdj/hakyll
 [GA]: https://github.com/mjhoy/mikey.bike/blob/main/.github/workflows/deploy.yml
