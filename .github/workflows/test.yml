@@ -6,6 +6,14 @@ on:
       - main
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: haskell-actions/run-fourmolu@v6
+      with:
+        pattern: |
+          src/**/*.hs
   test:
     runs-on: ubuntu-latest
     steps:
@@ -14,31 +22,54 @@ jobs:
       with:
         ghc-version: '9.2.7'
         cabal-version: '3.6.2'
-    - name: Cache ~/.cabal/packages, ~/.cabal/store and dist-newstyle
-      uses: actions/cache@v2
+        cabal-update: true
+
+    - name: Set GHC and Cabal versions in ENV
+      shell: bash
+      run: |
+        GHC_VERSION=$(ghc --numeric-version)
+        CABAL_VERSION=$(cabal --numeric-version)
+        echo "GHC_VERSION=${GHC_VERSION}"     >> "${GITHUB_ENV}"
+        echo "CABAL_VERSION=${CABAL_VERSION}" >> "${GITHUB_ENV}"
+
+    - name: Configure the build
+      run: |
+        cabal configure --enable-tests --enable-benchmarks --disable-documentation
+        cabal build --dry-run
+
+    - name: Restore cached dependencies
+      uses: actions/cache/restore@v3
+      id: cache
       with:
-        path: |
-          ~/.cabal/packages
-          ~/.cabal/store
-          dist-newstyle
-        key: ${{ runner.os }}-${{ matrix.ghc }}
-    - uses: haskell-actions/run-fourmolu@v6
-      with:
-        pattern: |
-          src/**/*.hs
+        path: ${{ steps.setup.outputs.cabal-store }}
+        key: ${{ runner.os }}-ghc-${{ env.GHC_VERSION }}-cabal-${{ env.CABAL_VERSION }}-plan-${{ hashFiles('**/plan.json') }}
+        restore-keys: |
+          ${{ runner.os }}-ghc-${{ env.GHC_VERSION }}-cabal-${{ env.CABAL_VERSION }}-
+
     - name: Install dependencies
-      run: |
-        cabal new-update
-        cabal new-install --only-dependencies
-    - name: Add cabal install dir to path
-      run: |
-        echo "$HOME/.cabal/bin" >> $GITHUB_PATH
+      run: cabal build all --only-dependencies
+
+    # Cache dependencies already here, so that we do not have to rebuild them should the subsequent steps fail.
+    - name: Save cached dependencies
+      uses: actions/cache/save@v3
+      # Caches are immutable, trying to save with the same key would error.
+      if: ${{ !steps.cache.outputs.cache-hit
+        || steps.cache.outputs.cache-primary-key != steps.cache.outputs.cache-matched-key }}
+      with:
+        path: ${{ steps.setup.outputs.cabal-store }}
+        key: ${{ steps.cache.outputs.cache-primary-key }}      
+
     - name: Build
-      run: |
-        cabal new-configure --enable-tests
-        cabal new-build
+      run: cabal build all
+
     - name: Run tests
-      run: make test
+      run: cabal test all
+
+    - name: Check cabal file
+      run: cabal check
+
+    - name: Build documentation
+      run: cabal haddock all
+
     - name: Run site build
-      run: |
-        cabal new-run site -- build
+      run: cabal run site -- build
