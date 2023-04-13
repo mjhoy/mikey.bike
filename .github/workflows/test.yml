@@ -5,11 +5,14 @@ on:
     branches-ignore:
       - main
 
+permissions:
+  contents: read
+
 jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v3
     - uses: haskell-actions/run-fourmolu@v6
       with:
         pattern: |
@@ -17,8 +20,10 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - uses: haskell/actions/setup@v2
+    - uses: actions/checkout@v3
+    - name: Set up GHC and cabal
+      uses: haskell/actions/setup@v2
+      id: setup
       with:
         ghc-version: '9.2.7'
         cabal-version: '3.6.2'
