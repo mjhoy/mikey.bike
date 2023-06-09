@@ -6,13 +6,18 @@
   line-height: 1.4em;
 }
 
+#mission {
+  font-size: 1.15em;
+  line-height: 1.4em;
+}
+
 #github-icon {
   width: 13px;
   padding-right: 2px;
 }
 
 header.main {
-  text-align: right;
+  text-align: center;
   margin-bottom: 2em;
 }
 
@@ -22,6 +27,12 @@ header.main h2 {
 
 header.main h3 {
   font-weight: 300;
+  margin-top: -0.7em;
+}
+
+header.main h4 {
+  font-weight: 400;
+  font-size: 0.85em;
 }
 
 section {
@@ -67,4 +78,11 @@ header h3.technologies {
   font-weight: 600;
   font-family: monospace;
   letter-spacing: 0.5px;
+}
+
+@media print {
+  #resume {
+    font-size: 0.8em;
+    line-height: 1.4em;
+  }
 }
