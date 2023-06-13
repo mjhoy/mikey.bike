@@ -1,0 +1,193 @@
+---
+title: Postgres enum migrations
+date: Tue, 13 Jun 2023 19:00:00 EDT
+---
+
+/Make illegal states unrepresentable!/ they said. And so, at work we
+went and made enums everywhere where we could. I count 72 uses of
+=CREATE TYPE ... AS ENUM= in our schema -- everything from months of
+the year to status values returned from external APIs. It's possible
+that we overused them. For instance, we had a =martial_status= enum
+with the variants =single= and =married=, which could just as well be
+a boolean =is_married=. Maybe. (Although: go and peruse Somerville's
+[[https://library.municode.com/ma/somerville/codes/code_of_ordinances?nodeId=PTIICOOR_CH2AD_ARTIXDOPA]["domestic partnerships" ordinance]] and tell me whether the city would
+need an additional enum variant here -- I'm not sure!)
+
+Anyway, managing these 72 enums turned out to be a little more painful
+than we expected. Migrating enums in Postgres is just /annoying/. Here
+are the solutions we came up with.
+
+* Creating a new enum: easy!
+
+As it should be. Nothing unexpected here: in the same transaction, we
+can add columns and constraints that use the new type, as well as
+insert values.
+
+Let's create a simple schema to play around with.
+
+#+begin_src sql
+begin;
+
+create type month as enum (
+    'jan',
+    'feb',
+    'mar',
+    'apr',
+    'may',
+    'jun',
+    -- whoops, forgot july!
+    'aug',
+    'oct',
+    'sep',
+    'nov',
+    'dec'    
+);
+
+-- all of the following work fine within the same transaction
+-- that creates the enum.
+
+create table users (
+  id serial primary key
+);
+
+alter table users
+  add column birth_month month default 'jan';
+
+-- this app does not allow Libras
+alter table users
+  add constraint birth_month_allowed
+  check (birth_month not in ('sep', 'oct'));
+
+insert into users (birth_month) values ('jun');
+
+commit;
+#+end_src
+
+* Dropping an enum: easy!
+
+Again, as it should be.
+
+#+begin_src sql
+begin;
+
+drop table users;
+
+drop type month;
+
+commit;
+#+end_src
+
+* Adding a new variant: annoying
+
+Postgres /does/ support adding new enum variants with an =ALTER TYPE=
+statement. This will work fine:
+
+#+begin_src sql
+alter type month
+  add value 'jul' after 'jun';
+#+end_src
+
+However, there is a restriction to this when in a transaction: we
+can't actually use any values added to the type until after it
+commits. This is a little bit of an unexpected head-scratcher, but
+must be due to the particulars of how enums are implemented. It's also
+the first concerning sign that enums might be a headache. For
+instance:
+
+#+begin_src sql
+begin;
+
+alter type month
+  add value 'jul' after 'jun';
+
+-- This will blow up:
+-- ERROR: unsafe use of new value "jul" of enum type month
+insert into users (birth_month) values ('jul');
+  
+commit;
+#+end_src
+
+There doesn't seem to be a way around this; we just have to break
+these up into separate transactions.
+
+* Dropping a variant: extremely annoying
+
+Postgres provides no inverse of =add value=: there /is no way/ to
+remove a variant from an enum. Which means we have to do it manually,
+by creating a new enum with the variant removed, and replacing the
+existing enum with it.
+
+We'll need to handle (at least) the following for migrating columns:
+
+1. Remove the default if one exists, and any check constraints that
+   use the column
+2. Migrate columns with =alter column (column) type (using ...)=
+3. Recreate defaults and check constraints
+
+The reason we need to recreate defaults and check constraints is that
+they can't reference the old type when we attempt to alter the
+column to the new type.
+
+Here's how we would do it for removing the =jul= variant:
+
+#+begin_src sql
+alter type month
+  rename to month_old;
+
+create type month as enum (
+    'jan',
+    'feb',
+    'mar',
+    'apr',
+    'may',
+    'jun',
+    -- 'jul' missing again.
+    'aug',
+    'oct',
+    'sep',
+    'nov',
+    'dec'
+);
+
+alter table users
+  drop constraint birth_month_allowed;
+
+alter table users
+  alter column birth_month
+  drop default;
+
+alter table users
+  alter column birth_month
+  type month using birth_month::text::month;
+
+alter table users
+  add constraint birth_month_allowed
+  check (birth_month not in ('sep', 'oct'));
+
+alter table users
+  alter column birth_month
+  set default 'jan';
+
+drop type month_old;
+#+end_src
+
+Phew! All that to remove July.
+
+This wasn't really a pain for production migrations -- it was rare
+that we needed to remove a variant. It bit us instead in development:
+we'd write a migration to add a new variant, play around with an
+implementation, ultimately decide to throw out the branch of code, and
+now we're left with a database with the extra variant and we'd need
+this migration to get rid of it.
+
+** Even worse...
+
+There are likely more steps to this "remove variant" migration; in
+fact I just tested and it looks like views that depend on the column
+would also need to get recreated.
+
+* Conclusion
+
+Postgres enums do come with a certain amount of hassle. I am /not/
+saying we shouldn't use them, but it helps to be aware of what we're
+getting ourselves into when we're modeling every little column as one.
