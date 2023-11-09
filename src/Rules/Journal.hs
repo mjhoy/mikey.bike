@@ -15,9 +15,18 @@ import Control.Monad
   ( filterM
   , forM
   )
-import Data.Maybe (isNothing)
+import Data.Maybe (isNothing, fromMaybe)
 import Hakyll
 import Models.ArchiveGrouping
+
+layoutCtx :: Context String
+layoutCtx = activeUrl <> constField "title" "Journal" <> defaultContext
+  where
+    activeUrl = functionField "activeUrl" $ \args _ -> do
+      let arg = head args
+      route <- getUnderlying >>= getRoute
+      let currentUrl = fromMaybe "" route
+      pure $ if currentUrl == arg then "active" else ""
 
 postCtx :: Context String
 postCtx = dateField "date" "%B %e, %Y" <> defaultContext
@@ -55,7 +64,6 @@ indexRoute assetHashes = do
     let detailPosts = take 1 posts
     indexCtx <- postIndexCtx (drop 1 posts)
 
-    let layoutCtx = constField "title" "Journal" <> defaultContext
     let homeCtx = listField "posts" postCtx (return detailPosts) <> indexCtx
     makeItem ""
       >>= loadAndApplyTemplate "templates/journal/home.html" homeCtx
@@ -71,7 +79,7 @@ rules assetHashes = do
         >>= loadAndApplyTemplate "templates/journal/content-body.html" postCtx
         >>= saveSnapshot "content"
         >>= loadAndApplyTemplate "templates/journal/page.html" postCtx
-        >>= loadAndApplyTemplate "templates/journal/layout.html" defaultContext
+        >>= loadAndApplyTemplate "templates/journal/layout.html" layoutCtx
         >>= rewriteAssetUrls assetHashes
 
   create ["j/rss.xml"] $ do
@@ -89,7 +97,6 @@ rules assetHashes = do
       posts <- loadPosts
       indexCtx <- postIndexCtx posts
 
-      let layoutCtx = constField "title" "Journal" <> defaultContext
       makeItem ""
         >>= loadAndApplyTemplate "templates/journal/archive.html" indexCtx
         >>= loadAndApplyTemplate "templates/journal/layout.html" layoutCtx
@@ -102,7 +109,6 @@ rules assetHashes = do
       let detailPosts = take 1 posts
       indexCtx <- postIndexCtx (drop 1 posts)
 
-      let layoutCtx = constField "title" "Journal" <> defaultContext
       let homeCtx = listField "posts" postCtx (return detailPosts) <> indexCtx
       makeItem ""
         >>= loadAndApplyTemplate "templates/journal/home.html" homeCtx
