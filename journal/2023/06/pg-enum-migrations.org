@@ -3,25 +3,26 @@ title: Postgres enum migrations
 date: Tue, 13 Jun 2023 19:00:00 EDT
 ---
 
-/Make illegal states unrepresentable!/ they said. And so, at work we
-went and made enums everywhere where we could. I count 72 uses of
-=CREATE TYPE ... AS ENUM= in our schema -- everything from months of
-the year to status values returned from external APIs. It's possible
-that we overused them. For instance, we had a =martial_status= enum
-with the variants =single= and =married=, which could just as well be
-a boolean =is_married=. Maybe. (Although: go and peruse Somerville's
-[[https://library.municode.com/ma/somerville/codes/code_of_ordinances?nodeId=PTIICOOR_CH2AD_ARTIXDOPA]["domestic partnerships" ordinance]] and tell me whether the city would
-need an additional enum variant here -- I'm not sure!)
+/Make illegal states unrepresentable!/ they said. And so at work we
+went and used [[https://www.postgresql.org/docs/current/datatype-enum.html][postgres enums]] everywhere where we could. I count 72
+uses of =CREATE TYPE ... AS ENUM= in our schema -- everything from
+months of the year to status values returned from external APIs. It's
+possible that we overused them. For instance, we had a
+=martial_status= enum with the variants =single= and =married=, which
+could just as well be a boolean =is_married=. Maybe. (Although: go and
+peruse Somerville's [[https://library.municode.com/ma/somerville/codes/code_of_ordinances?nodeId=PTIICOOR_CH2AD_ARTIXDOPA]["domestic partnerships" ordinance]] and tell me
+whether the city would need an additional enum variant here -- I'm not
+sure!)
 
 Anyway, managing these 72 enums turned out to be a little more painful
-than we expected. Migrating enums in Postgres is just /annoying/. Here
-are the solutions we came up with.
+than we expected. Migrating enums in Postgres is just
+/annoying/. Here's what went wrong, and how we dealt with it.
 
 * Creating a new enum: easy!
 
-As it should be. Nothing unexpected here: in the same transaction, we
-can add columns and constraints that use the new type, as well as
-insert values.
+As it should be. There's nothing unexpected here: in the same
+transaction, we can add columns and constraints that use the new type,
+as well as insert values.
 
 Let's create a simple schema to play around with.
 
@@ -189,5 +190,5 @@ would also need to get recreated.
 * Conclusion
 
 Postgres enums do come with a certain amount of hassle. I am /not/
-saying we shouldn't use them, but it helps to be aware of what we're
-getting ourselves into when we're modeling every little column as one.
+saying it's wrong to use them, but it helps to be aware of the
+downsides.
