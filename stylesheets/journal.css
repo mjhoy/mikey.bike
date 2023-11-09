@@ -132,9 +132,13 @@ header#main-header {
   max-width: 800px;
   font-size: 15px;
   font-family: ui-monospace, monospace;
-  font-weight: 900;
+  font-weight: 400;
   border-bottom: 5px solid #222;
   text-align: left;
+}
+
+header#main-header .home {
+  font-weight: 700;
 }
 
 header#main-header a[href] {
