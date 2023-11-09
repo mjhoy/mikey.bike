@@ -15,18 +15,18 @@ import Control.Monad
   ( filterM
   , forM
   )
-import Data.Maybe (isNothing, fromMaybe)
+import Data.Maybe (fromMaybe, isNothing)
 import Hakyll
 import Models.ArchiveGrouping
 
 layoutCtx :: Context String
 layoutCtx = activeUrl <> constField "title" "Journal" <> defaultContext
-  where
-    activeUrl = functionField "activeUrl" $ \args _ -> do
-      let arg = head args
-      route <- getUnderlying >>= getRoute
-      let currentUrl = fromMaybe "" route
-      pure $ if currentUrl == arg then "active" else ""
+ where
+  activeUrl = functionField "activeUrl" $ \args _ -> do
+    let arg = head args
+    route <- getUnderlying >>= getRoute
+    let currentUrl = fromMaybe "" route
+    pure $ if currentUrl == arg then "active" else ""
 
 postCtx :: Context String
 postCtx = dateField "date" "%B %e, %Y" <> defaultContext

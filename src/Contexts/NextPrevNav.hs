@@ -66,8 +66,8 @@ sortByDate xs = do
     t <- getItemUTC defaultTimeLocale ident
     return (t, ident)
 
-itemAfter :: Eq a => [a] -> a -> Maybe a
+itemAfter :: (Eq a) => [a] -> a -> Maybe a
 itemAfter xs x = lookup x $ zip xs (tail xs)
 
-itemBefore :: Eq a => [a] -> a -> Maybe a
+itemBefore :: (Eq a) => [a] -> a -> Maybe a
 itemBefore xs x = lookup x $ zip (tail xs) xs
