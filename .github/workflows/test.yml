@@ -12,15 +12,16 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - uses: haskell-actions/run-fourmolu@v6
+    - uses: actions/checkout@v4
+    - uses: haskell-actions/run-fourmolu@v9
       with:
+        version: "0.14.0.0"
         pattern: |
           src/**/*.hs
   test:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up GHC and cabal
       uses: haskell/actions/setup@v2
       id: setup
