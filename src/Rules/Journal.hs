@@ -82,7 +82,6 @@ rules assetHashes = do
         >>= loadAndApplyTemplate "templates/journal/layout.html" layoutCtx
         >>= rewriteAssetUrls assetHashes
 
-
   match "about.md" $ do
     route $ setExtension "html"
     compile $
