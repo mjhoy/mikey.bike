@@ -232,9 +232,15 @@ div.aside {
   margin-right: auto;
   padding: 15px 1em 0 1em;
 }
+.journal-entry.static-page .post-header {
+  margin-top: 35px;
+}
 .journal-entry:first-child .post-header {
   border: none;
   padding-top: 0;
+}
+.journal-detail {
+  margin-bottom: 3em;
 }
 .journal-entry.journal-detail .post-header {
   padding-top: 0;
