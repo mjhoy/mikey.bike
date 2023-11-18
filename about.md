@@ -3,10 +3,10 @@ title: About this site
 ---
 
 Hi! I'm Mikey Hoy, a software engineer in Somerville,
-Massachusetts. This is my blog that is now mostly not about biking. I
-[used to][writings] write more about biking.
+Massachusetts. This is my blog, which used to be [mostly about
+my bike trips][writings] and now it is not. 🚴‍♂️
 
-This site is generated using some code built around the [Hakyll]
+This site is generated with some code built around the [Hakyll]
 framework. It's available at [github.com/mjhoy/mikey.bike].
 
 The monospace font used is ["Monaspace Neon"][monaspace].
