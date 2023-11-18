@@ -82,6 +82,15 @@ rules assetHashes = do
         >>= loadAndApplyTemplate "templates/journal/layout.html" layoutCtx
         >>= rewriteAssetUrls assetHashes
 
+  match "about.md" $ do
+    route $ setExtension "html"
+    compile $
+      pandocCompiler
+        >>= loadAndApplyTemplate "templates/journal/content-body.html" defaultContext
+        >>= loadAndApplyTemplate "templates/journal/static-page.html" defaultContext
+        >>= loadAndApplyTemplate "templates/journal/layout.html" layoutCtx
+        >>= rewriteAssetUrls assetHashes
+
   create ["j/rss.xml"] $ do
     route idRoute
     compile $ do
