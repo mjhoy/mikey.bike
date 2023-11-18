@@ -8,7 +8,7 @@ went and used [[https://www.postgresql.org/docs/current/datatype-enum.html][post
 uses of =CREATE TYPE ... AS ENUM= in our schema -- everything from
 months of the year to status values returned from external APIs. It's
 possible that we overused them. For instance, we had a
-=martial_status= enum with the variants =single= and =married=, which
+=marital_status= enum with the variants =single= and =married=, which
 could just as well be a boolean =is_married=. Maybe. (Although: go and
 peruse Somerville's [[https://library.municode.com/ma/somerville/codes/code_of_ordinances?nodeId=PTIICOOR_CH2AD_ARTIXDOPA]["domestic partnerships" ordinance]] and tell me
 whether the city would need an additional enum variant here -- I'm not
