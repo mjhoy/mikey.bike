@@ -52,6 +52,10 @@ site = do
       route $ assetHashRoute cssHashes
       compile copyFileCompiler
 
+    match "fonts/*" $ do
+      route idRoute
+      compile copyFileCompiler
+
     match "index.html" $ Journal.indexRoute assetHashes
 
     match "resume.html" $ do
