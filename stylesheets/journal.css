@@ -23,8 +23,34 @@ header h1 {
   margin-top: 10px;
 }
 
+@font-face {
+  font-family: "Monaspace Neon";
+  font-weight: normal;
+  src: url('/fonts/MonaspaceNeon-Regular.woff') format('woff');
+}
+
+@font-face {
+  font-family: "Monaspace Neon";
+  font-weight: normal;
+  font-style: italic;
+  src: url('/fonts/MonaspaceNeon-Italic.woff') format('woff');
+}
+
+@font-face {
+  font-family: "Monaspace Neon";
+  font-weight: bold;
+  src: url('/fonts/MonaspaceNeon-Bold.woff') format('woff')
+}
+
+@font-face {
+  font-family: "Monaspace Neon";
+  font-weight: bold;
+  font-style: italic;
+  src: url('/fonts/MonaspaceNeon-BoldItalic.woff') format('woff')
+}
+
 pre, code {
-  font-family: "SF Mono","SFMono-Regular",ui-monospace,Courier,monospace;
+  font-family: "Monaspace Neon", "SF Mono","SFMono-Regular",ui-monospace,Courier,monospace;
 }
 .content-writing p code,
 .content-writing li code,
@@ -84,9 +110,7 @@ p > img {
   max-width: 530px;
 }
 
-
-
-.sourceCode span.kw { color: #333333; font-weight: bold; } /* Keyword */
+.sourceCode span.kw { color: #333333; } /* Keyword */
 .sourceCode span.dt { color: #902000; } /* DataType */
 .sourceCode span.dv { color: #40a070; } /* DecVal */
 .sourceCode span.bn { color: #40a070; } /* BaseN */
@@ -105,12 +129,12 @@ p > img {
 .sourceCode span.ss { color: #bb6688; } /* SpecialString */
 .sourceCode span.im { } /* Import */
 .sourceCode span.va { color: #19177c; } /* Variable */
-.sourceCode span.cf { color: #666666; font-weight: bold; } /* ControlFlow */
+.sourceCode span.cf { color: #668e4a; } /* ControlFlow */
 .sourceCode span.op { color: #666666; } /* Operator */
 .sourceCode span.bu { } /* BuiltIn */
 .sourceCode span.ex { } /* Extension */
 .sourceCode span.pp { color: #bc7a00; } /* Preprocessor */
-.sourceCode span.at { color: #7d9029; } /* Attribute */
+.sourceCode span.at {  } /* Attribute */
 .sourceCode span.do { color: #ba2121; font-style: italic; } /* Documentation */
 .sourceCode span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 .sourceCode span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
@@ -131,7 +155,7 @@ header#main-header {
   padding: 0.5em 1em 1em 1em;
   max-width: 800px;
   font-size: 14px;
-  font-family: ui-monospace, monospace;
+  font-family: "Monaspace Neon", monospace;
   font-weight: 400;
   border-bottom: 5px solid #222;
   text-align: left;
@@ -218,7 +242,7 @@ div.aside {
 .journal-date {
   margin-top: 2em;
   margin-bottom: 0;
-  font-family: ui-monospace, monospace;
+  font-family: "Monaspace Neon", monospace;
   font-size: 14px;
   font-weight: 400;
   color: #444;
@@ -240,9 +264,9 @@ div.aside {
   font-style: italic;
 }
 pre.sourceCode {
-  background-color: rgb(255, 255, 236);
-  padding: 10px;
+  padding: 10px 10px 10px 18px;
   width: 610px;
+  border-left: 2px dotted rgb(207, 207, 207);
 }
 blockquote {
   font-size: 13px;
@@ -267,7 +291,7 @@ blockquote {
   font-size: 1em;
   margin-top: 3em;
   margin-bottom: 1em;
-  font-family: ui-monospace, monospace;
+  font-family: "Monaspace Neon", monospace;
   font-weight: 400;
   color: #858585;
   font-size: 14px;
@@ -276,12 +300,12 @@ blockquote {
   font-size: 1em;
   margin-top: 2em;
   margin-bottom: 1em;
-  font-family: ui-monospace, monospace;
-  font-weight: 400;
-  font-size: 14px;
+  font-family: "Monaspace Neon", monospace;
+  font-weight: bold;
+  font-size: 13px;
 }
 .journal-archive .journal-archive-title {
   margin: 0.5em 0;
   font-family: "Helvetica Neue", Helvetica, sans-serif;
-  font-weight: 300;
+  font-size: 14px;
 }
