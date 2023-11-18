@@ -19,9 +19,11 @@ import Data.Maybe (fromMaybe, isNothing)
 import Hakyll
 import Models.ArchiveGrouping
 
-layoutCtx :: Context String
-layoutCtx = activeUrl <> constField "title" "Journal" <> defaultContext
+layoutCtx :: Maybe String -> Context String
+layoutCtx maybeTitle = activeUrl <> titleContext maybeTitle <> defaultContext
  where
+  titleContext (Just t) = constField "title" t
+  titleContext Nothing = mempty
   activeUrl = functionField "activeUrl" $ \args _ -> do
     let arg = head args
     route <- getUnderlying >>= getRoute
@@ -67,7 +69,7 @@ indexRoute assetHashes = do
     let homeCtx = listField "posts" postCtx (return detailPosts) <> indexCtx
     makeItem ""
       >>= loadAndApplyTemplate "templates/journal/home.html" homeCtx
-      >>= loadAndApplyTemplate "templates/journal/layout.html" layoutCtx
+      >>= loadAndApplyTemplate "templates/journal/layout.html" (layoutCtx $ Just "Journal")
       >>= rewriteAssetUrls assetHashes
 
 rules :: FileHashes -> Rules ()
@@ -79,7 +81,7 @@ rules assetHashes = do
         >>= loadAndApplyTemplate "templates/journal/content-body.html" postCtx
         >>= saveSnapshot "content"
         >>= loadAndApplyTemplate "templates/journal/page.html" postCtx
-        >>= loadAndApplyTemplate "templates/journal/layout.html" layoutCtx
+        >>= loadAndApplyTemplate "templates/journal/layout.html" (layoutCtx Nothing)
         >>= rewriteAssetUrls assetHashes
 
   match "about.md" $ do
@@ -88,7 +90,7 @@ rules assetHashes = do
       pandocCompiler
         >>= loadAndApplyTemplate "templates/journal/content-body.html" defaultContext
         >>= loadAndApplyTemplate "templates/journal/static-page.html" defaultContext
-        >>= loadAndApplyTemplate "templates/journal/layout.html" layoutCtx
+        >>= loadAndApplyTemplate "templates/journal/layout.html" (layoutCtx $ Just "About")
         >>= rewriteAssetUrls assetHashes
 
   create ["j/rss.xml"] $ do
@@ -108,7 +110,7 @@ rules assetHashes = do
 
       makeItem ""
         >>= loadAndApplyTemplate "templates/journal/archive.html" indexCtx
-        >>= loadAndApplyTemplate "templates/journal/layout.html" layoutCtx
+        >>= loadAndApplyTemplate "templates/journal/layout.html" (layoutCtx $ Just "Archive")
         >>= rewriteAssetUrls assetHashes
 
   create ["j/index.html"] $ do
@@ -121,5 +123,5 @@ rules assetHashes = do
       let homeCtx = listField "posts" postCtx (return detailPosts) <> indexCtx
       makeItem ""
         >>= loadAndApplyTemplate "templates/journal/home.html" homeCtx
-        >>= loadAndApplyTemplate "templates/journal/layout.html" layoutCtx
+        >>= loadAndApplyTemplate "templates/journal/layout.html" (layoutCtx $ Just "Journal")
         >>= rewriteAssetUrls assetHashes
