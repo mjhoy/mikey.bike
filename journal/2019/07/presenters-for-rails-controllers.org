@@ -277,10 +277,16 @@ code. A front end developer knows exactly which variables were meant
 for the view. If nothing else, there is a self-documenting nature to
 =present= that the standard Rails controller lacks.
 
+#+begin_aside
+**Update 6/30/24**: Not only have I moved on from writing Rails code, Freebird
+no longer exists! I've archived Livery to my personal github page if it's of any
+interest.
+#+end_aside
+
 Freebird has extracted a simple library for setting this up in Rails
 controllers, as well as providing a base =Presenter= class with some
-conveniences. Check it out, it's [[https://github.com/getfreebirdinc/livery][called Livery]]. It does a bit more
+conveniences. Check it out, it's [[https://github.com/mjhoy/livery][called Livery]]. It does a bit more
 than the =PostsController= example here, but the basic idea is the
-same. For instance, [[https://github.com/getfreebirdinc/livery/blob/1fa99e496fc4fe3b0a49e525713b7c36bbda0ac9/lib/livery/controller.rb#L113][our implementation of =present=]] handles passing in
+same. For instance, [[https://github.com/mjhoy/livery/blob/886a630b9f6483bedddf2ecff8a5e6feaef26c05/lib/livery/controller.rb#L113][our implementation of =present=]] handles passing in
 presenter objects directly, objects with module namespaces, and
 collections.
