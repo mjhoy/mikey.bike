@@ -315,3 +315,24 @@ blockquote {
   font-family: "Helvetica Neue", Helvetica, sans-serif;
   font-size: 14px;
 }
+
+#lists-home {
+  max-width: 800px;
+  margin-left: 1em;
+  margin-right: auto;
+  margin-top: 13px;
+  padding: 15px 1em 0 1em;
+}
+
+.list-item p, .list-item div {
+  display: inline;
+}
+
+.list-item .title {
+  font-style: italic;
+  padding-right: 3px;
+}
+
+.list-item .author {
+  color: #4b4b4b;
+}

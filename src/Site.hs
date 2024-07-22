@@ -20,6 +20,7 @@ import Debug.Trace (traceShowM)
 import qualified Rules.Journal as Journal
 import qualified Rules.Notes as Notes
 import qualified Rules.Writing as Writing
+import qualified Rules.Lists as Lists
 
 site :: IO ()
 site = do
@@ -79,5 +80,7 @@ site = do
           >>= loadAndApplyTemplate "templates/writing.html" defaultContext
           >>= loadAndApplyTemplate "templates/layout.html" defaultContext
           >>= rewriteAssetUrls assetHashes
+
+    Lists.rules assetHashes
 
     match "templates/**" $ compile templateBodyCompiler

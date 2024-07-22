@@ -1,0 +1,15 @@
+<section class="list-item">
+  <div class="stars">$stars$</div>
+  $if(link)$
+    <div class="title">
+      <a href="$link$" target="_blank">$title$</a>
+    </div>
+  $else$
+    <div class="title">$title$</div>
+  $endif$
+  $if(author)$
+    <div class="author">$author$</div>
+  $endif$
+  &mdash;
+  <div class="body">$body$</div>
+</section>
