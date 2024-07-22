@@ -4,6 +4,7 @@
 module Rules.Journal
   ( rules
   , indexRoute
+  , layoutCtx
   ) where
 
 import AssetHashing
