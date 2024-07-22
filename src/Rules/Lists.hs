@@ -4,10 +4,10 @@
 module Rules.Lists (rules) where
 
 import AssetHashing (FileHashes, rewriteAssetUrls)
-import Rules.Journal (layoutCtx)
-import Hakyll
-import Data.Maybe (fromMaybe)
 import Control.Applicative (empty)
+import Data.Maybe (fromMaybe)
+import Hakyll
+import Rules.Journal (layoutCtx)
 
 starCtx :: Context String
 starCtx = field "stars" $ \item -> do

@@ -18,9 +18,9 @@ import System.FilePath
 
 import Debug.Trace (traceShowM)
 import qualified Rules.Journal as Journal
+import qualified Rules.Lists as Lists
 import qualified Rules.Notes as Notes
 import qualified Rules.Writing as Writing
-import qualified Rules.Lists as Lists
 
 site :: IO ()
 site = do
