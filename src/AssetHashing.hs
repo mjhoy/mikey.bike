@@ -18,7 +18,6 @@ import qualified Data.ByteString.Base16 as Base16
 import qualified Data.ByteString.Char8 as BS8
 import Data.Map (Map)
 import qualified Data.Map as Map
-import Data.Maybe (fromMaybe)
 import Hakyll
   ( Compiler
   , Identifier
@@ -79,8 +78,8 @@ lookupHashForUrl hashes url = Map.lookup (fromFilePath urlWithoutRootSlash) hash
   urlWithoutRootSlash = dropWhile (== '/') url
 
 addHashToUrl :: FilePath -> String -> String
-addHashToUrl path hash =
+addHashToUrl path hsh =
   let baseName = takeBaseName path
       extension = takeExtension path
       dir = takeDirectory path
-   in dir </> baseName <> "-" <> hash <> extension
+   in dir </> baseName <> "-" <> hsh <> extension

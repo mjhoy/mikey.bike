@@ -4,10 +4,9 @@
 module Rules.Lists (rules) where
 
 import AssetHashing (FileHashes, rewriteAssetUrls)
-import Control.Applicative (empty)
+import Contexts.Layout (Layout (..), layoutCtx)
 import Data.Maybe (fromMaybe)
 import Hakyll
-import Rules.Journal (layoutCtx)
 
 starCtx :: Context String
 starCtx = field "stars" $ \item -> do
@@ -38,5 +37,5 @@ rules assetHashes = do
       let ctx = listField "items" listCtx (pure items)
       makeItem ""
         >>= loadAndApplyTemplate "templates/lists/home.html" ctx
-        >>= loadAndApplyTemplate "templates/journal/layout.html" (layoutCtx $ Just "Lists")
+        >>= loadAndApplyTemplate "templates/base/layout.html" (layoutCtx $ Layout{title = Just "Lists", rssFeed = Nothing})
         >>= rewriteAssetUrls assetHashes

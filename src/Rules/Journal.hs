@@ -4,32 +4,21 @@
 module Rules.Journal
   ( rules
   , indexRoute
-  , layoutCtx
   ) where
 
 import AssetHashing
   ( FileHashes
   , rewriteAssetUrls
   )
+import Contexts.Layout (Layout (..), layoutCtx)
 import Control.Category ((<<<))
 import Control.Monad
   ( filterM
   , forM
   )
-import Data.Maybe (fromMaybe, isNothing)
+import Data.Maybe (isNothing)
 import Hakyll
 import Models.ArchiveGrouping
-
-layoutCtx :: Maybe String -> Context String
-layoutCtx maybeTitle = activeUrl <> titleContext maybeTitle <> defaultContext
- where
-  titleContext (Just t) = constField "title" t
-  titleContext Nothing = mempty
-  activeUrl = functionField "activeUrl" $ \args _ -> do
-    let arg = head args
-    route <- getUnderlying >>= getRoute
-    let currentUrl = fromMaybe "" route
-    pure $ if currentUrl == arg then "active" else ""
 
 postCtx :: Context String
 postCtx = dateField "date" "%B %e, %Y" <> defaultContext
@@ -70,8 +59,14 @@ indexRoute assetHashes = do
     let homeCtx = listField "posts" postCtx (return detailPosts) <> indexCtx
     makeItem ""
       >>= loadAndApplyTemplate "templates/journal/home.html" homeCtx
-      >>= loadAndApplyTemplate "templates/journal/layout.html" (layoutCtx $ Just "Journal")
+      >>= loadAndApplyTemplate "templates/base/layout.html" (layoutCtx $ Layout{title = Just "Journal", rssFeed = Just "/j/rss.xml"})
       >>= rewriteAssetUrls assetHashes
+
+rssUrl :: String
+rssUrl = "/j/rss.xml"
+
+layout :: Maybe String -> Context String
+layout maybeTitle = layoutCtx $ Layout{title = maybeTitle, rssFeed = Just rssUrl}
 
 rules :: FileHashes -> Rules ()
 rules assetHashes = do
@@ -82,7 +77,7 @@ rules assetHashes = do
         >>= loadAndApplyTemplate "templates/journal/content-body.html" postCtx
         >>= saveSnapshot "content"
         >>= loadAndApplyTemplate "templates/journal/page.html" postCtx
-        >>= loadAndApplyTemplate "templates/journal/layout.html" (layoutCtx Nothing)
+        >>= loadAndApplyTemplate "templates/base/layout.html" (layout Nothing)
         >>= rewriteAssetUrls assetHashes
 
   match "about.md" $ do
@@ -91,10 +86,10 @@ rules assetHashes = do
       pandocCompiler
         >>= loadAndApplyTemplate "templates/journal/content-body.html" defaultContext
         >>= loadAndApplyTemplate "templates/journal/static-page.html" defaultContext
-        >>= loadAndApplyTemplate "templates/journal/layout.html" (layoutCtx $ Just "About")
+        >>= loadAndApplyTemplate "templates/base/layout.html" (layout $ Just "About")
         >>= rewriteAssetUrls assetHashes
 
-  create ["j/rss.xml"] $ do
+  create [fromFilePath (drop 1 rssUrl)] $ do
     route idRoute
     compile $ do
       let feedCtx = postCtx `mappend` bodyField "description"
@@ -111,7 +106,7 @@ rules assetHashes = do
 
       makeItem ""
         >>= loadAndApplyTemplate "templates/journal/archive.html" indexCtx
-        >>= loadAndApplyTemplate "templates/journal/layout.html" (layoutCtx $ Just "Archive")
+        >>= loadAndApplyTemplate "templates/base/layout.html" (layout $ Just "Archive")
         >>= rewriteAssetUrls assetHashes
 
   create ["j/index.html"] $ do
@@ -124,5 +119,5 @@ rules assetHashes = do
       let homeCtx = listField "posts" postCtx (return detailPosts) <> indexCtx
       makeItem ""
         >>= loadAndApplyTemplate "templates/journal/home.html" homeCtx
-        >>= loadAndApplyTemplate "templates/journal/layout.html" (layoutCtx $ Just "Journal")
+        >>= loadAndApplyTemplate "templates/base/layout.html" (layout $ Just "Journal")
         >>= rewriteAssetUrls assetHashes

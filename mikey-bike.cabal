@@ -28,6 +28,7 @@ library
                   , Rules.Notes
                   , Rules.Lists
                   , AssetHashing
+                  , Contexts.Layout
                   , Contexts.NextPrevNav
                   , Models.ArchiveGrouping
                   , Site
