@@ -54,6 +54,6 @@ test-suite test
                   , containers ^>= 0.6.2.1
                   , filepath >=1.4
                   , hakyll == 4.15.*
-                  , hspec ^>= 2.8.3
+                  , hspec ^>= 2.11.9
                   , mikey-bike
   build-tool-depends: hspec-discover:hspec-discover

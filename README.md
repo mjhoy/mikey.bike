@@ -7,11 +7,11 @@ Static site generator for https://mikey.bike based on [Hakyll][hakyll].
 mikey.bike requires ghc & cabal to build. I suggest using `ghcup` to
 get these. Go follow the instructions at https://www.haskell.org/ghcup/.
 
-Now install and use GHC 9.2.7:
+Now install and use GHC 9.4.8:
 
 ```sh
-ghcup install ghc 9.2.7
-ghcup set ghc 9.2.7
+ghcup install ghc 9.4.8
+ghcup set ghc 9.4.8
 ```
 
 Now, you should be able to build the project. The first time will take

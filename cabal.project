@@ -1,0 +1,3 @@
+packages: ./*.cabal
+tests: True
+constraints: hakyll +previewServer
