@@ -6,7 +6,6 @@ module Contexts.NextPrevNav
 
 import Control.Applicative (empty)
 import Data.List (sort)
-import Data.Monoid ((<>))
 import Data.Time.Clock (UTCTime)
 import Data.Time.Locale.Compat (defaultTimeLocale)
 import Hakyll

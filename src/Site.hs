@@ -16,7 +16,6 @@ import System.FilePath
   , splitDirectories
   )
 
-import Debug.Trace (traceShowM)
 import qualified Rules.Journal as Journal
 import qualified Rules.Lists as Lists
 import qualified Rules.Notes as Notes
