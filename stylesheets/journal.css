@@ -344,15 +344,19 @@ blockquote {
   padding: 15px 1em 0 1em;
 }
 
-.list-item p, .list-item div {
+.list-entry p, .list-entry div {
   display: inline;
 }
 
-.list-item .title {
+.list-entry .title {
   font-style: italic;
   padding-right: 3px;
 }
 
-.list-item .author {
+.list-entry .author {
   color: #4b4b4b;
+}
+
+.list-entry {
+  margin: 0 0 1em 0;
 }
