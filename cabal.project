@@ -1,3 +1,5 @@
 packages: ./*.cabal
 tests: True
+package mikey-bike
+  ghc-options: -Wall
 constraints: hakyll +previewServer

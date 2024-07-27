@@ -24,8 +24,8 @@ spec = do
 
   describe "mkFileHashes" $ do
     it "should return a map of file hashes for a directory" $ do
-      map <- mkFileHashes fixturesDir
-      let res = Map.lookup (fromFilePath $ fixturesDir </> testFile) map
+      hashmap <- mkFileHashes fixturesDir
+      let res = Map.lookup (fromFilePath $ fixturesDir </> testFile) hashmap
       res `shouldBe` Just expectedHash
 
   describe "addHashToUrl" $ do
@@ -38,12 +38,12 @@ spec = do
     it "should find the hashes url without a root slash" $ do
       hashes <- mkFileHashes fixturesDir
       let res = lookupHashForUrl hashes "test/fixtures/test-file-hash.json"
-      res `shouldBe` (Just expectedHash)
+      res `shouldBe` Just expectedHash
 
     it "should find the hashes url with a root slash" $ do
       hashes <- mkFileHashes fixturesDir
       let res = lookupHashForUrl hashes "/test/fixtures/test-file-hash.json"
-      res `shouldBe` (Just expectedHash)
+      res `shouldBe` Just expectedHash
 
   describe "rewriteAssetUrls'" $ do
     it "should rewrite URLs in a string" $ do
