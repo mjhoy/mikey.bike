@@ -1,6 +1,6 @@
 # mikey.bike
 
-Static site generator for https://mikey.bike based on [Hakyll][hakyll].
+Static site generator for https://mikey.bike, using the [Hakyll][hakyll] library.
 
 ## building
 
