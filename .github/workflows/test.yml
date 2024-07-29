@@ -65,8 +65,8 @@ jobs:
         path: ${{ steps.setup.outputs.cabal-store }}
         key: ${{ steps.cache.outputs.cache-primary-key }}      
 
-    - name: Build
-      run: cabal build all
+    - name: Check warnings
+      run: cabal build all --ghc-options="-Werror"
 
     - name: Run tests
       run: cabal test all
