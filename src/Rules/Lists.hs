@@ -35,7 +35,7 @@ rules assetHashes = do
     compile $ do
       items <- loadItems
       let ctx = listField "items" listCtx (pure items)
-      makeItem ""
+      makeItem ("" :: String)
         >>= loadAndApplyTemplate "templates/lists/home.html" ctx
         >>= loadAndApplyTemplate "templates/base/layout.html" (layoutCtx $ Layout{title = Just "Lists", rssFeed = Nothing})
         >>= rewriteAssetUrls assetHashes

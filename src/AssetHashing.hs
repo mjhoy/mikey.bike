@@ -9,7 +9,8 @@ module AssetHashing
   , rewriteAssetUrls'
   , addHashToUrl
   , lookupHashForUrl
-  ) where
+  )
+where
 
 import Control.Monad.Extra (forM)
 import qualified Crypto.Hash.SHA256 as SHA256
@@ -65,7 +66,7 @@ rewriteAssetUrls hashes item = do
   route <- getRoute $ itemIdentifier item
   pure $ case route of
     Nothing -> item
-    Just r -> fmap (rewriteAssetUrls' hashes) item
+    Just _ -> fmap (rewriteAssetUrls' hashes) item
 
 rewriteAssetUrls' :: FileHashes -> String -> String
 rewriteAssetUrls' hashes = withUrls rewrite
