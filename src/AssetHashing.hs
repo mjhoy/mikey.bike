@@ -66,7 +66,7 @@ rewriteAssetUrls hashes item = do
   route <- getRoute $ itemIdentifier item
   pure $ case route of
     Nothing -> item
-    Just r -> fmap (rewriteAssetUrls' hashes) item
+    Just _ -> fmap (rewriteAssetUrls' hashes) item
 
 rewriteAssetUrls' :: FileHashes -> String -> String
 rewriteAssetUrls' hashes = withUrls rewrite
