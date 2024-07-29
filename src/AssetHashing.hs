@@ -9,7 +9,8 @@ module AssetHashing
   , rewriteAssetUrls'
   , addHashToUrl
   , lookupHashForUrl
-  ) where
+  )
+where
 
 import Control.Monad.Extra (forM)
 import qualified Crypto.Hash.SHA256 as SHA256
