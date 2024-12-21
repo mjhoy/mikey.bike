@@ -21,6 +21,11 @@ a long time (mostly because of pandoc).
 make build
 ```
 
+As part of the build, you'll need `pkg-config` installed and the `zlib`
+library available. It appears that macOS doesn't ship with `pkg-config`; you
+can install it with homebrew: `brew install pkg-config`. That should work
+to pick up the system zlib.
+
 ## development
 
 To run a local server on port 8000:
