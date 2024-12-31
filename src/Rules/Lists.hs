@@ -33,7 +33,7 @@ rules assetHashes = do
   create ["lists.html"] $ do
     route idRoute
     compile $ do
-      items <- loadItems
+      items <- recentFirst =<< loadItems
       let ctx = listField "items" listCtx (pure items)
       makeItem ("" :: String)
         >>= loadAndApplyTemplate "templates/lists/home.html" ctx
