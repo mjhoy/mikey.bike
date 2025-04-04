@@ -1,3 +1,15 @@
+body {
+  color: black;
+  background-color: white;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    color: rgb(218, 225, 232);
+    background-color: rgb(15, 11, 21);
+  }
+}
+
 .content-writing {
   max-width: 800px;
   margin-top: 3em;
@@ -51,6 +63,7 @@ header h1 {
 
 pre, code {
   font-family: "Monaspace Neon", "SF Mono","SFMono-Regular",ui-monospace,Courier,monospace;
+  font-size: 0.95em;
 }
 .content-writing p code,
 .content-writing li code,
@@ -69,26 +82,6 @@ pre, code {
   padding: 0 1em 0 1em;
 }
 
-.nav-prev-link,
-.nav-next-link {
-    position: absolute;
-    top: 79px;
-    color: #555;
-}
-
-.nav-prev-link:hover,
-.nav-next-link:hover {
-    color: black;
-}
-
-.nav-prev-link {
-    left: 20px;
-}
-
-.nav-next-link {
-    right: 20px;
-}
-
 figcaption {
   max-width: 700px;
   margin: 0.2em auto 16px auto;
@@ -97,6 +90,13 @@ figcaption {
   text-align: center;
   color: #555;
 }
+
+@media (prefers-color-scheme: dark) {
+  figcaption {
+    color: #aaa;
+  }
+}
+
 figure {
   max-width: 600px;
   margin: 1.5em auto 1em 0;
@@ -140,6 +140,40 @@ p > img {
 .sourceCode span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
 .sourceCode span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 
+@media (prefers-color-scheme: dark) {
+  .sourceCode span.   { color: #b8c6d5; } /* Normal */
+  .sourceCode span.al { color: #f47359; } /* Alert */
+  .sourceCode span.an { color: #61a06c; } /* Annotation */
+  .sourceCode span.at { color: #3f95f6; } /* Attribute */
+  .sourceCode span.bn { color: #d1803f; } /* BaseN */
+  .sourceCode span.bu { color: #807c9f; } /* BuiltIn */
+  .sourceCode span.cf { color: #af85ea; } /* ControlFlow */
+  .sourceCode span.ch { color: #4fbaef; } /* Char */
+  .sourceCode span.cn { color: #00a392; } /* Constant */
+  .sourceCode span.co { color: #807c9f; } /* Comment */
+  .sourceCode span.cv { color: #807c9f; } /* CommentVar */
+  .sourceCode span.do { color: #ef6560; } /* Documentation */
+  .sourceCode span.dt { color: #6a9fff; } /* DataType */
+  .sourceCode span.dv { color: #d1803f; } /* DecVal */
+  .sourceCode span.er { color: #ff6a7a; } /* Error */
+  .sourceCode span.ex { color: #029fff; } /* Extension */
+  .sourceCode span.fl { color: #d1803f; } /* Float */
+  .sourceCode span.fu { color: #b8c6d5; } /* Function */
+  .sourceCode span.im { color: #29a444; } /* Import */
+  .sourceCode span.in { color: #df9080; } /* Information */
+  .sourceCode span.kw { color: #b8c6d5; } /* Keyword */
+  .sourceCode span.op { color: #af85ea; } /* Operator */
+  .sourceCode span.ot { color: #29a444; } /* Other */
+  .sourceCode span.pp { color: #29a444; } /* Preprocessor */
+  .sourceCode span.re { color: #3f95f6; } /* RegionMarker */
+  .sourceCode span.sc { color: #4fbaef; } /* SpecialChar */
+  .sourceCode span.ss { color: #ff6a7a; } /* SpecialString */
+  .sourceCode span.st { color: #abc4e7; } /* String */
+  .sourceCode span.va { color: #00a392; } /* Variable */
+  .sourceCode span.vs { color: #ff6a7a; } /* VerbatimString */
+  .sourceCode span.wa { color: #ff6a7a; } /* Warning */
+}
+
 footer#main {
   margin: 0 auto;
   padding: 0.5em 1em 3em 1em;
@@ -162,6 +196,12 @@ header#main-header {
   color: #999;
 }
 
+@media (prefers-color-scheme: dark) {
+  header#main-header {
+    border-bottom-color: #666;
+  }
+}
+
 header#main-header .home {
   font-weight: 700;
 }
@@ -180,7 +220,8 @@ header#main-header a[href]:after {
   width: 8px;
   display: inline-block;
   content: " ";
-}
+  color: #777;}
+
 header#main-header a[href]:hover:before {
   content: "[";
 }
@@ -200,6 +241,31 @@ header#main-header a[href]:hover {
   border-bottom: 1px solid #eee;
 }
 
+@media (prefers-color-scheme: dark) {
+  header#main-header {
+    color: #bbb;
+  }
+  header#main-header a[href] {
+    color: #ccc;
+  }
+  header#main-header a[href]:before {
+    color: #aaa;
+  }
+  header#main-header a[href]:after {
+    color: #aaa;
+  }
+  header#main-header a[href].active:before {
+    color: white;
+  }
+  header#main-header a[href].active:after {
+    color: white;
+  }
+  header#main-header a[href]:hover {
+    color: white;
+    border-bottom-color: #333;
+  }
+}
+
 a[href] {
   color:black;
   text-decoration:none;
@@ -217,6 +283,21 @@ a.journal-permalink {
   padding-right: 2px;
   position: relative;
   bottom: 1px;
+}
+
+@media (prefers-color-scheme: dark) {
+  a[href] {
+    color: rgb(214, 168, 230);
+    border-bottom-color: #612b95;
+  }
+
+  a[href]:hover {
+    border-bottom-color: white;
+  }
+
+  a.journal-permalink {
+    color: #aaa;
+  }
 }
 
 footer.post-footer {
@@ -239,6 +320,13 @@ div.aside {
   color: #222;
   margin-top: 0.4em;
 }
+
+@media (prefers-color-scheme: dark) {
+  div.aside {
+    color: #ccc;
+  }
+}
+
 .content-writing div.aside p {
   margin-top: 0;
 }
@@ -274,12 +362,24 @@ div.aside {
   color: #444;
 }
 
+@media (prefers-color-scheme: dark) {
+  .journal-date {
+    color: #ccc;
+  }
+}
+
 .journal-entry .content-writing h1 {
   margin-top: 48px;
   font-size: 18px;
   font-family: "Helvetica Neue", Helvetica, sans-serif;
   font-weight: 600;
   color: #181818;
+}
+
+@media (prefers-color-scheme: dark) {
+  .journal-entry .content-writing h1 {
+    color: rgb(218, 225, 232);
+  }
 }
 
 .journal-entry .content-writing h2 {
@@ -293,6 +393,12 @@ pre.sourceCode {
   padding: 10px 10px 10px 18px;
   width: 610px;
   border-left: 2px dotted rgb(207, 207, 207);
+}
+@media (prefers-color-scheme: dark) {
+  pre.sourceCode {
+    border-left: 2px dotted rgb(85, 85, 85);
+    background-color: rgb(31, 4, 31);
+  }
 }
 blockquote {
   font-size: 13px;
@@ -355,6 +461,12 @@ blockquote {
 
 .list-entry .author {
   color: #4b4b4b;
+}
+
+@media (prefers-color-scheme: dark) {
+  .list-entry .author {
+    color: #959595;
+  }
 }
 
 .list-entry {
