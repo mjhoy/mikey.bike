@@ -267,9 +267,9 @@ header#main-header a[href]:hover {
 }
 
 a[href] {
-  color:black;
+  color: rgb(101, 24, 96);
   text-decoration:none;
-  border-bottom:1px solid #a32929;
+  border-bottom:1px solid #931d9e;
 }
 
 a[href]:hover {
@@ -288,7 +288,7 @@ a.journal-permalink {
 @media (prefers-color-scheme: dark) {
   a[href] {
     color: rgb(214, 168, 230);
-    border-bottom-color: #612b95;
+    border-bottom-color: #6c379f;
   }
 
   a[href]:hover {
@@ -393,6 +393,7 @@ pre.sourceCode {
   padding: 10px 10px 10px 18px;
   width: 610px;
   border-left: 2px dotted rgb(207, 207, 207);
+  background-color: rgb(249, 250, 251);
 }
 @media (prefers-color-scheme: dark) {
   pre.sourceCode {
