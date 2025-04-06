@@ -1,6 +1,6 @@
 ---
 title: Ten Years of Emacs
-date: Sat, 06 Apr 2025 13:00:00 EDT
+date: Sun, 06 Apr 2025 13:00:00 EDT
 ---
 
 #+begin_aside
