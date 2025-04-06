@@ -185,21 +185,19 @@ footer#main {
 }
 
 header#main-header {
-  margin: 0 auto 0 1em;
-  padding: 0.5em 1em 0 1em;
+  margin: 0 auto 3em 1em;
+  padding: 0.5em 1em 0.5em 1em;
   max-width: 800px;
   font-size: 14px;
   font-family: "Monaspace Neon", monospace;
   font-weight: 400;
-  border-bottom: 5px solid #222;
   text-align: left;
   color: #999;
-}
 
-@media (prefers-color-scheme: dark) {
-  header#main-header {
-    border-bottom-color: #666;
-  }
+  background-image: linear-gradient(to right, rgb(161,33,161), transparent);
+  background-position: bottom;
+  background-size: 100% 5px;
+  background-repeat: no-repeat;
 }
 
 header#main-header .home {
