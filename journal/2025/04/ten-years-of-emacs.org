@@ -1,0 +1,53 @@
+---
+title: Ten Years of Emacs
+date: Sun, 06 Apr 2025 13:00:00 EDT
+---
+
+#+begin_aside
+OK, technically it's been [[https://github.com/mjhoy/dotfiles/commit/6d373b03f5cdb59079f743cae5b8c8d7dd420f26][eleven years and change]] since I first checked in my
+init file, but who's counting.
+#+end_aside
+
+When I first tried Emacs I hated it. /Hated/ it! Compared to Vim, just trying to
+navigate around felt agonizingly cumbersome: mashing modifier keys, relying so
+much on my left pinky, firing off random commands by accident. Vim, with its
+modes, values /movement/: a lot of programming is jumping around like crazy and
+shuttling text from one place to another. Writing is not the bottleneck.
+
+And yet I had to admit Emacs had two very cool things: [[https://orgmode.org][org-mode]] and [[https://magit.vc][magit]]. I
+liked magit because it built a powerful UI on top of git without obscuring the
+underlying commands I was used to. (I'm one of those weird people that actually
+likes command line =git=.) Similarly, org-mode built something wildly rich on
+top of plain text, again without obscuring it too much. Something about the
+ethos of all this appealed to me.
+
+Emacs values composability. Building rich systems out of simpler parts. Vim is a
+chainsaw; Emacs is a box of LEGOs which can produce a very /dull/ chainsaw, but
+also lots of other things. Just watch where you're walking.
+
+#+begin_aside
+[[https://www.youtube.com/watch?v=urcL86UpqZc]["But I will always use Magit though."]]
+#+end_aside
+
+So I started using Emacs and never really stopped. It's been with me daily at
+work, my IDE for PureScript, Rails, C#, and now Scala. I use it for reading and
+writing email, for task tracking, for journaling. There have been periods --
+usually when I start a job -- where I switch to a JetBrains IDE or VS Code until
+I get my Emacs config up to speed. But the truth is that Emacs can work pretty
+well wherever VS Code can now, largely thanks to LSP (and, increasingly,
+[[https://tree-sitter.github.io/tree-sitter/][tree-sitter]]).
+
+I've gone through several iterations of my config. Currently I've switched to
+using the newer generation of more composable packages that build on top of
+existing Emacs subsystems: [[https://github.com/minad/consult][consult]], [[https://github.com/minad/corfu][corfu]], [[https://github.com/minad/vertico][vertico]], [[https://github.com/oantolin/orderless][orderless]], [[https://github.com/oantolin/embark][embark]]. There
+seems to be a movement in the community lately toward smaller, simpler and more
+modular packages over comprehensive and monolithic packages like [[https://github.com/emacs-helm/helm][helm]].
+
+I still use org-mode and magit every day.
+
+There is something rewarding in picking a tool, sticking with it, and getting to
+know it better over time, whether it's Vim, Emacs, IntelliJ, whatever. I suspect
+I'll still be using Emacs in next ten years, although I'm sure my day-to-day use
+will look quite a bit different as more and more text and code gets slung
+through LLMs. I hope that whatever interface I'm using for this holds to the
+principle that the best systems are composed of simple, understandable parts.
