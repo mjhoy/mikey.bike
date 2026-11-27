@@ -16,6 +16,7 @@ preview: site-clean
 
 site-build: site-clean
 	cabal new-run site -- build
+	cabal new-run site -- check-links
 
 site-clean:
 	cabal new-run site -- clean

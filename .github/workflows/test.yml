@@ -73,3 +73,6 @@ jobs:
 
     - name: Run site build
       run: cabal run site -- build
+
+    - name: Check links
+      run: cabal run site -- check-links
