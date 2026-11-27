@@ -62,7 +62,6 @@ rules sections assetHashes = do
     let dir = writingSectionDir section
     case maybeIdx of
       Just idx -> match (fromGlob idx) $ do
-        route $ setExtension "html"
         compile $ do
           let writingsGlob = fromGlob (dir </> "**")
           writings <- chronological =<< loadAll writingsGlob
